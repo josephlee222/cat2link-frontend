@@ -8,7 +8,6 @@ import InfoBox from "../../components/InfoBox";
 import { useSnackbar } from "notistack";
 import http from "../../http";
 import { LoadingButton } from "@mui/lab";
-import { Link, json } from "react-router-dom";
 import { coerceToArrayBuffer, coerceToBase64Url } from "../../functions/fidoHelpers";
 import { useFormik } from "formik";
 import * as Yup from "yup";
