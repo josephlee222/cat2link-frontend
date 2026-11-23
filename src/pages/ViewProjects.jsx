@@ -10,17 +10,18 @@ import CardTitle from '../components/CardTitle';
 import InfoBox from '../components/InfoBox';
 import ItemDialog from '../components/ItemDialog';
 import { get, post } from 'aws-amplify/api';
+import http from '../http';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 
-export default function ViewItems() {
+export default function ViewProjects() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
     //const { setIsAdminPage } = useContext(UserContext);
-    titleHelper("Search Items")
+    titleHelper("Projects")
     const apiUrl = import.meta.env.VITE_API_URL;
     const bucket_url = import.meta.env.VITE_BUCKET_URL
-    const [items, setItems] = useState([])
+    const [projects, setProjects] = useState([])
     const [category, setCategory] = useState([])
     const [loading, setLoading] = useState(false)
     const [categoryLoading, setCategoryLoading] = useState(true)
@@ -101,63 +102,55 @@ export default function ViewItems() {
     })
 
 
-    const handleGetItems = async () => {
+    const handleGetProjects = async () => {
         setLoading(true)
         setSelectedCategory(null)
-        var itemReq = get({
-            apiName: "midori",
-            path: "/items?attach=true",
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setItems(data)
-            setLoading(false)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load items", { variant: "error" })
-            setLoading(false)
-        }
+        http.get("/projects/").then((res) => {
+            if (res.status === 200) {
+                var result = res.data
+                console.log(result.reverse())
+                setProjects(result)
+                setLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load projects! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+        )
     }
 
-    const handleGetItemsByCategory = async (id) => {
+    const handleGetProjectsByCategory = async (id) => {
         setLoading(true)
         setSelectedCategory(id)
-        var itemReq = get({
-            apiName: "midori",
-            path: "/items?attach=true&categoryId=" + id
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setItems(data)
-            setLoading(false)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load items", { variant: "error" })
-            setLoading(false)
-        }
+        http.get("/categories/" + id).then((res) => {
+            if (res.status === 200) {
+                console.log(res)
+                var result = res.data.projects
+                console.log(result.reverse())
+                setProjects(result)
+                setLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load projects! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+        )
     }
 
     const handleGetCategories = async () => {
         setCategoryLoading(true)
-        var itemReq = get({
-            apiName: "midori",
-            path: "/categories",
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setCategory(data)
-            setCategoryLoading(false)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load item categories", { variant: "error" })
-            setCategoryLoading(false)
-        }
+        http.get("/categories/").then((res) => {
+            if (res.status === 200) {
+                var result = res.data
+                console.log(result.reverse())
+                setCategory(result)
+                setCategoryLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load categories! " + err.response.data.message, { variant: "error" });
+                setCategoryLoading(false)
+            }
+        )
     }
 
     const handleDetailsClose = () => {
@@ -205,7 +198,7 @@ export default function ViewItems() {
 
 
     useEffect(() => {
-        handleGetItems()
+        handleGetProjects()
         handleGetCategories()
     }, [])
 
@@ -217,14 +210,14 @@ export default function ViewItems() {
                     <Box display={{ xs: "none", md: "block" }}>
                         <Box display={"flex"} alignItems="center">
                             <SearchRounded sx={{ fontSize: "3rem", color: theme.palette.primary.main, mx: "1rem" }} />
-                            <Typography variant="h4" my={"2rem"} ml={"1rem"} fontWeight={700}>Search Items</Typography>
+                            <Typography variant="h4" my={"2rem"} ml={"1rem"} fontWeight={700}>Projects</Typography>
                         </Box>
 
                         <Divider sx={{ mb: "1rem" }} />
                     </Box>
                     <Stack direction="row" spacing={"0.5rem"} flexWrap={"wrap"} useFlexGap>
                         <Button variant="contained" startIcon={<NotificationAddRounded />} onClick={handleSubscribeCategoryOpen}>Subscribe...</Button>
-                        <LoadingButton loadingPosition='start' variant="outlined" startIcon={<RefreshRounded />} onClick={handleGetItems} loading={loading}>Refresh</LoadingButton>
+                        <LoadingButton loadingPosition='start' variant="outlined" startIcon={<RefreshRounded />} onClick={handleGetProjects} loading={loading}>Refresh</LoadingButton>
                     </Stack>
                     <Grid2 container spacing={2} sx={{ mt: "1rem" }}>
                         <Grid2 size={{ md: 3, xs: 12 }}>
@@ -237,7 +230,7 @@ export default function ViewItems() {
                                                 <Button variant={
                                                     selectedCategory === null ? "contained" : "outlined"
                                                 } onClick={() => {
-                                                    handleGetItems()
+                                                    handleGetProjects()
                                                 }}>All</Button>
                                             )}
                                             {categoryLoading && (
@@ -253,11 +246,13 @@ export default function ViewItems() {
                                                 </>
                                             )}
                                             {!categoryLoading && category.map((cat, i) => (
-                                                <Button variant={
-                                                    selectedCategory === cat.id ? "contained" : "outlined"
-                                                } key={i} onClick={() => {
-                                                    handleGetItemsByCategory(cat.id)
-                                                }}>{cat.name}</Button>
+                                                <Badge badgeContent={cat.projects.length} color="primary">
+                                                    <Button variant={
+                                                        selectedCategory === cat.id ? "contained" : "outlined"
+                                                    } key={i} onClick={() => {
+                                                        handleGetProjectsByCategory(cat.id)
+                                                    }}>{cat.name}</Button>
+                                                </Badge>
                                             ))}
                                         </Stack>
                                     </Box>
@@ -285,7 +280,7 @@ export default function ViewItems() {
                                     ))}
 
                                 {// Show all items
-                                    !loading && items.map((item, i) => (
+                                    !loading && projects.map((item, i) => (
                                         <Grid2 size={{ lg: 4, sm: 6, xs: 12 }} key={i}>
                                             <Card sx={{ width: "100%" }}>
                                                 <CardMedia
@@ -299,19 +294,19 @@ export default function ViewItems() {
                                                     <Typography gutterBottom variant="h6" fontWeight={700}>
                                                         {item.name}
                                                     </Typography>
-                                                    <Chip label={item.categoryName} icon={<CategoryRounded />} size='small' />
+                                                    <Chip label={item.category_name} icon={<CategoryRounded />} size='small' />
                                                 </CardContent>
                                                 <CardActions>
                                                     <Button size="medium" startIcon={<InfoRounded />} onClick={() => {
                                                         handleDetailsOpen(item.id)
-                                                    }}>Item Details</Button>
+                                                    }}>Project Details</Button>
                                                 </CardActions>
                                             </Card>
                                         </Grid2>
                                     ))}
 
                                 {// If no items are found}
-                                    !loading && items.length === 0 && (
+                                    !loading && projects.length === 0 && (
                                         <Grid2 size={{ xs: 12 }}>
                                             <Stack direction={"column"} spacing={'0.5rem'} py={"2rem"} sx={{ justifyContent: "center", alignItems: "center", borderRadius: "10px", border: "1px solid lightgrey" }}>
                                                 <CloseRounded sx={{ height: "32px", width: "32px", color: "grey" }} />

@@ -6,7 +6,7 @@ import { CategoryRounded, HomeRounded, InfoRounded, LoginRounded, NewReleasesRou
 import titleHelper from '../functions/helpers';
 import { useSnackbar } from "notistack";
 import CardTitle from '../components/CardTitle';
-import { get } from 'aws-amplify/api';
+import http from '../http';
 import ItemDialog from '../components/ItemDialog';
 
 
@@ -20,27 +20,25 @@ function Home() {
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
     const [detailsId, setDetailsId] = useState(null)
     const { enqueueSnackbar } = useSnackbar();
-    const [items, setItems] = useState([])
+    const [projects, setProjects] = useState([])
     const theme = useTheme()
     const bucket_url = import.meta.env.VITE_BUCKET_URL
 
 
-    const handleGetItems = async () => {
+    const handleGetProjects = async () => {
         setLoading(true)
-        var itemReq = get({
-            apiName: "midori",
-            path: "/items?limit=3&attach=true",
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setItems(data)
-            setLoading(false)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load items", { variant: "error" })
-        }
+        http.get("/projects/").then((res) => {
+            if (res.status === 200) {
+                var activities = res.data
+                console.log(activities.reverse())
+                setProjects(activities)
+                setLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load activities! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+        )
     }
 
     const handleDetailsClose = () => {
@@ -53,7 +51,7 @@ function Home() {
     }
 
     useEffect(() => {
-        handleGetItems()
+        handleGetProjects()
     }, [])
 
 
@@ -64,10 +62,10 @@ function Home() {
                 <Container maxWidth="xl">
                     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem", flexDirection: { xs: "column-reverse", md: "row" }, }}>
                         <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="h2" fontWeight={700} sx={{ color: theme.palette.primary.contrastText }}>ReclaimIt</Typography>
-                            <Typography variant="h5" fontWeight={400} sx={{ color: theme.palette.primary.contrastText }}>A platform for reclaiming lost items</Typography>
+                            <Typography variant="h2" fontWeight={700} sx={{ color: theme.palette.primary.contrastText }}>Joseph Lee</Typography>
+                            <Typography variant="h5" fontWeight={400} sx={{ color: theme.palette.primary.contrastText }}>Computer and Software Enthusiast</Typography>
 
-                            <Button variant="white" color="secondary" sx={{ mt: "1rem" }} component={Link} to="/items" startIcon={<SearchRounded />}>Search for items</Button>
+                            <Button variant="white" color="secondary" sx={{ mt: "1rem" }} component={Link} to="/items" startIcon={<SearchRounded />}>View Projects</Button>
                         </Box>
                         <Box>
                             <img src="/lost_and_found.png" alt="Hero" style={{ width: "100%", maxWidth: "300px" }} />
@@ -76,9 +74,9 @@ function Home() {
                 </Container>
             </Box>
             <Container maxWidth="xl">
-                <Typography variant="h5" my={"2rem"} fontWeight={700} sx={{ borderBottom: "3px dashed " + theme.palette.primary.main, width: "fit-content" }}>Latest Found Items</Typography>
+                <Typography variant="h5" my={"2rem"} fontWeight={700} sx={{ borderBottom: "3px dashed " + theme.palette.primary.main, width: "fit-content" }}>Latest Projects</Typography>
                 <Grid2 container spacing={2} sx={{ mb: "1rem"}}>
-                    {// If items are loading, show skeleton loaders instead of the items}
+                    {// If projects are loading, show skeleton loaders instead of the projects}
                         loading && [1, 2, 3].map((i) => (
                             <Grid2 size={{ lg: 4, sm: 6, xs: 12 }} key={i}>
                                 <Card sx={{ width: "100%" }}>
@@ -94,8 +92,8 @@ function Home() {
                                 </Card>
                             </Grid2>
                         ))}
-                    {// Show first 3 items
-                        items.slice(0, 3).map((item, i) => (
+                    {// Show first 3 projects
+                        projects.slice(0, 3).map((item, i) => (
                             <Grid2 size={{ lg: 4, sm: 6, xs: 12 }} key={i}>
                                 <Card sx={{ width: "100%" }}>
                                     <CardMedia
@@ -108,12 +106,12 @@ function Home() {
                                         <Typography gutterBottom variant="h6" fontWeight={700}>
                                             {item.name}
                                         </Typography>
-                                        <Chip label={item.categoryName} icon={<CategoryRounded />} size='small' />
+                                        <Chip label={item.category_name} icon={<CategoryRounded />} size='small' />
                                     </CardContent>
                                     <CardActions>
                                         <Button size="medium" startIcon={<InfoRounded />} onClick={() => {
                                             handleDetailsOpen(item.id)
-                                        }}>Item Details</Button>
+                                        }}>Project Details</Button>
                                     </CardActions>
                                 </Card>
                             </Grid2>

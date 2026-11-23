@@ -5,7 +5,7 @@ import LoginIcon from '@mui/icons-material/LoginRounded';
 import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
 import NavbarNotifications from "./NavbarNotifications";
-import { DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SearchRounded, SettingsRounded, TerminalRounded } from "@mui/icons-material";
+import { DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SearchRounded, SettingsRounded, TerminalRounded, CategoryRounded } from "@mui/icons-material";
 import { HomeRounded } from "@mui/icons-material";
 import StaffMenu from "./StaffMenu";
 
@@ -22,13 +22,14 @@ export default function Navbar() {
                 <Toolbar>
                     <Box sx={{ flexGrow: 1, alignItems: "center", display: "flex" }}>
                         <Box sx={{ flexGrow: 1, display: ["none", "none", "flex"], alignItems: "center" }}>
-                            <Link to="/" style={{ textDecoration: 'none', color: 'white', fontWeight: 700, display: "flex", alignItems: "center" }}>ReclaimIt</Link>
+                            <Link to="/" style={{ textDecoration: 'none', color: 'white', fontWeight: 700, display: "flex", alignItems: "center" }}>Cat2.Link</Link>
                             {import.meta.env.DEV && <Chip icon={<TerminalRounded/>} label="DEV" size="small" color="warning" sx={{ ml: "1rem" }} />}
                             <Divider orientation="vertical" flexItem sx={{ mx: "1rem" }} />
                             {!adminPage &&
                                 <Stack direction="row" spacing={1}>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<HomeRounded />} LinkComponent={Link} variant="text" color="inherit" to="/">Home</Button>
-                                    <Button sx={{ fontWeight: 700 }} startIcon={<SearchRounded />} LinkComponent={Link} variant="text" color="inherit" to="/items">Search Items</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<SearchRounded />} LinkComponent={Link} variant="text" color="inherit" to="/items">Projects</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<PersonRounded />} LinkComponent={Link} variant="text" color="inherit" to="/about">About</Button>
                                 </Stack>
                             }
 
@@ -61,7 +62,7 @@ export default function Navbar() {
             >
                 <List sx={{ width: "250px" }}>
                     <Box marginX={"1rem"} marginY={".5rem"}>
-                        <Typography variant="h6" fontWeight={700}>ReclaimIt</Typography>
+                        <Typography variant="h6" fontWeight={700}>Cat2.Link</Typography>
                         <Typography variant="body">Navigation Menu</Typography>
                     </Box>
                     <Divider sx={{ marginBottom: 1 }} />
@@ -74,7 +75,13 @@ export default function Navbar() {
                     <ListItem key={"About Us"} disablePadding>
                         <ListItemButton LinkComponent={Link} to="/items" onClick={() => setIsDrawerOpen(false)}>
                             <ListItemIcon><SearchRounded /></ListItemIcon>
-                            <ListItemText primary={"Search Items"} />
+                            <ListItemText primary={"Projects"} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"About"} disablePadding>
+                        <ListItemButton LinkComponent={Link} to="/about" onClick={() => setIsDrawerOpen(false)}>
+                            <ListItemIcon><PersonRounded /></ListItemIcon>
+                            <ListItemText primary={"About"} />
                         </ListItemButton>
                     </ListItem>
                 </List>
@@ -100,7 +107,13 @@ export default function Navbar() {
                     <ListItem key={"Farms"} disablePadding>
                         <ListItemButton LinkComponent={Link} to="/staff/items" onClick={() => setIsAdminDrawerOpen(false)}>
                             <ListItemIcon><ForestRounded /></ListItemIcon>
-                            <ListItemText primary={"Found Items"} />
+                            <ListItemText primary={"Projects"} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"Categories"} disablePadding>
+                        <ListItemButton LinkComponent={Link} to="/staff/categories" onClick={() => setIsAdminDrawerOpen(false)}>
+                            <ListItemIcon><CategoryRounded /></ListItemIcon>
+                            <ListItemText primary={"Categories"} />
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"Users"} disablePadding>

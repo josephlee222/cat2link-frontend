@@ -1,11 +1,9 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
-        "Content-Type": "application/json",
-        "Allow-Control-Allow-Origin": "*"
+        "Content-Type": "application/json"
     },
 });
 
@@ -37,7 +35,7 @@ instance.interceptors.response.use(function (response) {
             if (localStorage.getItem("token")) {
                 localStorage.clear();
                 alert("Your session has expired. Please login again.");
-                window.location("/login");
+                window.location.href = "/login";
             }
         } catch (e) {}
     }
