@@ -1,11 +1,9 @@
-import { useContext, useEffect, useState, Suspense, useRef, useLayoutEffect } from 'react'
-import { Route, Routes, Navigate, Link } from 'react-router-dom'
-import { Button, Container, Divider, Typography, Box, Card, TextField, Skeleton, CardContent, CardMedia, Chip, Alert, Collapse, Grid, Stack, Grid2, useTheme, CardActions } from '@mui/material'
-import { AppContext } from '../App';
-import { CategoryRounded, HomeRounded, InfoRounded, LoginRounded, NewReleasesRounded, SearchRounded, WarningRounded } from '@mui/icons-material';
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Button, Container, Typography, Box, Card, Skeleton, CardContent, CardMedia, Chip, Stack, Grid2, useTheme, CardActions } from '@mui/material'
+import { CategoryRounded, InfoRounded, SearchRounded, WebRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
 import { useSnackbar } from "notistack";
-import CardTitle from '../components/CardTitle';
 import http from '../http';
 import ItemDialog from '../components/ItemDialog';
 
@@ -64,8 +62,11 @@ function Home() {
                         <Box sx={{ flexGrow: 1 }}>
                             <Typography variant="h2" fontWeight={700} sx={{ color: theme.palette.primary.contrastText }}>Joseph Lee</Typography>
                             <Typography variant="h5" fontWeight={400} sx={{ color: theme.palette.primary.contrastText }}>Computer and Software Enthusiast</Typography>
-
-                            <Button variant="white" color="secondary" sx={{ mt: "1rem" }} component={Link} to="/items" startIcon={<SearchRounded />}>View Projects</Button>
+                            <Stack direction="row" spacing="1rem" sx={{ mt: "1rem" }}>
+                                <Button variant="white" color="secondary" sx={{ mt: "1rem" }} component={Link} to="/projects" startIcon={<WebRounded />}>View Projects</Button>
+                                <Button variant="secondary_inverted" color="secondary" sx={{ mt: "1rem" }} component={Link} to="/about" startIcon={<InfoRounded />}>About Me</Button>
+                            </Stack>
+                            
                         </Box>
                         <Box>
                             <img src="/lost_and_found.png" alt="Hero" style={{ width: "100%", maxWidth: "300px" }} />

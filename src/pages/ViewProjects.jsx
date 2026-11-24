@@ -1,13 +1,10 @@
-import { useContext, useEffect, useState, Suspense, useRef, useLayoutEffect } from 'react'
-import { Route, Routes, Navigate, Link, Form } from 'react-router-dom'
-import { Button, Container, Divider, Typography, Box, Card, TextField, Skeleton, CardContent, CardMedia, Chip, Alert, Collapse, Grid, Stack, Grid2, useTheme, CardActions, Badge, Select, DialogContent, DialogContentText, DialogActions, Dialog, DialogTitle, Stepper, Step, StepLabel, MenuItem } from '@mui/material'
-import { AppContext } from '../App';
-import { ArrowForwardRounded, CategoryRounded, CheckRounded, CloseRounded, HomeRounded, InfoRounded, LoginRounded, NewReleasesRounded, NotificationAddRounded, NotificationsActiveRounded, NotificationsOffRounded, RefreshRounded, SearchRounded, WarningRounded } from '@mui/icons-material';
+import { useEffect, useState } from 'react'
+import { Button, Container, Divider, Typography, Box, Card, TextField, Skeleton, CardContent, CardMedia, Chip, Stack, Grid2, useTheme, CardActions, Badge, Select, DialogContent, DialogContentText, DialogActions, Dialog, DialogTitle, Stepper, Step, StepLabel, MenuItem } from '@mui/material'
+import { WebRounded, ArrowForwardRounded, CategoryRounded, CheckRounded, CloseRounded, InfoRounded, NotificationAddRounded, NotificationsActiveRounded, NotificationsOffRounded, RefreshRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
 import { useSnackbar } from "notistack";
 import { LoadingButton } from '@mui/lab';
 import CardTitle from '../components/CardTitle';
-import InfoBox from '../components/InfoBox';
 import ItemDialog from '../components/ItemDialog';
 import { get, post } from 'aws-amplify/api';
 import http from '../http';
@@ -209,7 +206,7 @@ export default function ViewProjects() {
                 <Box sx={{ marginY: "1rem" }}>
                     <Box display={{ xs: "none", md: "block" }}>
                         <Box display={"flex"} alignItems="center">
-                            <SearchRounded sx={{ fontSize: "3rem", color: theme.palette.primary.main, mx: "1rem" }} />
+                            <WebRounded sx={{ fontSize: "3rem", color: theme.palette.primary.main, mx: "1rem" }} />
                             <Typography variant="h4" my={"2rem"} ml={"1rem"} fontWeight={700}>Projects</Typography>
                         </Box>
 
@@ -310,7 +307,7 @@ export default function ViewProjects() {
                                         <Grid2 size={{ xs: 12 }}>
                                             <Stack direction={"column"} spacing={'0.5rem'} py={"2rem"} sx={{ justifyContent: "center", alignItems: "center", borderRadius: "10px", border: "1px solid lightgrey" }}>
                                                 <CloseRounded sx={{ height: "32px", width: "32px", color: "grey" }} />
-                                                <Typography variant="body1" color="grey">No items in category</Typography>
+                                                <Typography variant="body1" color="grey">No projects in category</Typography>
                                             </Stack>
                                         </Grid2>
                                     )}

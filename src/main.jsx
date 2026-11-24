@@ -92,6 +92,18 @@ let theme = createTheme({
           },
         },
         {
+          props: { variant: 'secondary_inverted' },
+          style: {
+            color: "#ffffff",
+            backgroundColor: "#607D8B",
+            border: "1px solid white",
+            '&:hover': {
+              backgroundColor: "#455A6480",
+            },
+            backdropFilter: "blur(10px)",
+          }
+        },
+        {
           props: { variant: 'white' },
           style: {
             color: "#607D8B",

@@ -34,7 +34,7 @@ function UserRoutes() {
             <Route path="/test" element={<Test />} />
             <Route path="/profile/*" element={<ProfileRoutes />} />
             <Route path="/about" element={<About />} />
-            <Route path="/items" element={<ViewProjects />} />
+            <Route path="/projects" element={<ViewProjects />} />
         </Routes>
     )
 }

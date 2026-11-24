@@ -1,11 +1,5 @@
-import React from 'react'
-import { Container, Typography, Divider, Box, Grid, Stack, Button } from '@mui/material'
+import { Typography, Divider, Box } from '@mui/material'
 import { Link } from 'react-router-dom'
-import HomeIcon from '@mui/icons-material/Home';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import StoreIcon from '@mui/icons-material/Store';
-import { ContactPageRounded, EmailRounded, PhoneRounded, PolicyRounded } from '@mui/icons-material';
 
 function Footer() {
     return (
@@ -54,7 +48,7 @@ function Footer() {
                 </Container> */}
                 <Box sx={{ textAlign: "center", margin: "1rem" }}>
                     <Link to="/about" style={{ textDecoration: "none", color: "inherit" }}>
-                        <Typography color={"inherit"} sx={{ textAlign: "center", opacity: "0.5" }} >ReclaimIt - Joseph Lee - 2025</Typography>
+                        <Typography color={"inherit"} sx={{ textAlign: "center", opacity: "0.5" }} >Cat2.Link - Joseph Lee - 2027</Typography>
                     </Link>
                 </Box>
             </Box>

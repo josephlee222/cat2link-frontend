@@ -5,7 +5,7 @@ import LoginIcon from '@mui/icons-material/LoginRounded';
 import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
 import NavbarNotifications from "./NavbarNotifications";
-import { DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SearchRounded, SettingsRounded, TerminalRounded, CategoryRounded } from "@mui/icons-material";
+import { WebRounded, DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SearchRounded, SettingsRounded, TerminalRounded, CategoryRounded } from "@mui/icons-material";
 import { HomeRounded } from "@mui/icons-material";
 import StaffMenu from "./StaffMenu";
 
@@ -28,7 +28,7 @@ export default function Navbar() {
                             {!adminPage &&
                                 <Stack direction="row" spacing={1}>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<HomeRounded />} LinkComponent={Link} variant="text" color="inherit" to="/">Home</Button>
-                                    <Button sx={{ fontWeight: 700 }} startIcon={<SearchRounded />} LinkComponent={Link} variant="text" color="inherit" to="/items">Projects</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<WebRounded />} LinkComponent={Link} variant="text" color="inherit" to="/projects">Projects</Button>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<PersonRounded />} LinkComponent={Link} variant="text" color="inherit" to="/about">About</Button>
                                 </Stack>
                             }
@@ -73,8 +73,8 @@ export default function Navbar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"About Us"} disablePadding>
-                        <ListItemButton LinkComponent={Link} to="/items" onClick={() => setIsDrawerOpen(false)}>
-                            <ListItemIcon><SearchRounded /></ListItemIcon>
+                        <ListItemButton LinkComponent={Link} to="/projects" onClick={() => setIsDrawerOpen(false)}>
+                            <ListItemIcon><WebRounded /></ListItemIcon>
                             <ListItemText primary={"Projects"} />
                         </ListItemButton>
                     </ListItem>
@@ -93,7 +93,7 @@ export default function Navbar() {
             >
                 <List sx={{ width: "250px" }}>
                     <Box marginX={"1rem"} marginY={".5rem"}>
-                        <Typography variant="h6" fontWeight={700}>ReclaimIt</Typography>
+                        <Typography variant="h6" fontWeight={700}>Cat2.Link</Typography>
                         <Typography variant="body">Staff Panel</Typography>
                     </Box>
                     <Divider sx={{ my: 1 }} />
