@@ -104,12 +104,17 @@ export default function ProfileRoutes() {
     }
 
     useEffect(() => {
-        validateUser().then((valid) => {
-            if (!valid) {
-                enqueueSnackbar("You must be logged in to view this page", { variant: "error" });
-                navigate("/login");
-            }
-        })
+        if (!user) {
+            enqueueSnackbar("You must be logged in to view this page", { variant: "error" });
+            navigate("/login");
+        }
+
+        // validateUser().then((valid) => {
+        //     if (!valid) {
+        //         enqueueSnackbar("You must be logged in to view this page", { variant: "error" });
+        //         navigate("/login");
+        //     }
+        // })
     }, [])
 
     return (

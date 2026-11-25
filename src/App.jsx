@@ -29,39 +29,16 @@ function App() {
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        // Initializer code
-        getCurrentUser().then((user) => {
-            fetchUserAttributes().then((attributes) => {
-                setUser(attributes);
-                setUserLoading(false);
-            }).catch((e) => {
-                console.log(e);
-                setUserLoading(false);
-            })
-        }).catch((e) => {
-            console.log(e);
+        http.get("/auth/refresh").then((res) => {
+            const data = res.data;
+            setToken(data.access_token);
+            setUser(data.user);
+            localStorage.setItem("token", data.access_token);
             setUserLoading(false);
-        });
-
-        // Get access token
-        fetchAuthSession().then((session) => {
-            var token = session.tokens.accessToken.toString();
-            setUserRoles(session.tokens.accessToken.payload["cognito:groups"] ? session.tokens.accessToken.payload["cognito:groups"] : []);
-            const existingConfig = Amplify.getConfig();
-            Amplify.configure(existingConfig, {
-                API: {
-                    REST: {
-                        headers: async () => {
-                            return { Authorization: token };
-                        }
-                    }
-                }
-            });
-
-            localStorage.setItem("token", token);
-            setToken(token);
         }).catch((e) => {
             console.log(e);
+            enqueueSnackbar("Failed to refresh token", { variant: "error" });
+            setUserLoading(false);
         });
     }, [])
 

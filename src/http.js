@@ -5,6 +5,7 @@ const instance = axios.create({
     headers: {
         "Content-Type": "application/json"
     },
+    withCredentials: true
 });
 
 // Add a request interceptor
@@ -33,11 +34,22 @@ instance.interceptors.response.use(function (response) {
     if (error.response.status === 401) {
         try {
             if (localStorage.getItem("token")) {
-                localStorage.clear();
-                alert("Your session has expired. Please login again.");
-                window.location.href = "/login";
+                try {
+                    http.get("/auth/refresh").then((res) => {
+                        const accessToken = res.data.access_token;
+                        setToken(accessToken);
+                        localStorage.setItem("token", accessToken);
+                    }).catch((e) => {
+                        console.log(e);
+                    });
+                } catch (e) {
+                    console.log(e);
+                    localStorage.clear();
+                    alert("Your session has expired. Please login again.");
+                    window.location.href = "/login";
+                }
             }
-        } catch (e) {}
+        } catch (e) { }
     }
     return Promise.reject(error);
 });

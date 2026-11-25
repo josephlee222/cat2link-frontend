@@ -1,26 +1,19 @@
 import { useState, useContext } from "react";
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Popover, Divider, Typography, Button, colors, Menu, MenuItem } from "@mui/material"
+import { Box, IconButton, ListItemIcon, ListItemText, Divider, Typography, colors, Menu, MenuItem } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture";
 import { AppContext } from "../App";
 
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LogoutIcon from '@mui/icons-material/LogoutRounded';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import PersonIcon from '@mui/icons-material/PersonRounded';
-import SupportIcon from '@mui/icons-material/Support';
 import { enqueueSnackbar } from "notistack";
-import { Diversity3Rounded, ShoppingBagRounded, ShoppingCartRounded } from "@mui/icons-material";
-import { signOut } from "aws-amplify/auth";
+import http from "../http";
 
 export default function NavbarProfile() {
     const { user, setUser, userRoles } = useContext(AppContext);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
-    const staffRoles = ["Farmer", "Admin", "FarmManager"];
-    const isStaff = userRoles.some(item => staffRoles.includes(item));
+    const isStaff = user.role == "admin";
     const navigate = useNavigate()
     const menuSlotProps = {
         paper: {
@@ -59,8 +52,13 @@ export default function NavbarProfile() {
 
     function handleLogout() {
         setIsPopoverOpen(false)
-        signOut()
         setUser(null)
+        localStorage.removeItem("token");
+
+        http.get("/auth/logout").catch((err) => {
+            enqueueSnackbar("An error occurred while logging out.", { variant: "warning" });
+        });
+        
         enqueueSnackbar("Successfully logged out", { variant: "success" })
         navigate("/")
     }
@@ -99,7 +97,7 @@ export default function NavbarProfile() {
                 {isStaff &&
                     <MenuItem component={Link} to="/staff">
                         <ListItemIcon><AdminPanelSettingsIcon /></ListItemIcon>
-                        <ListItemText primary={"Staff Panel"} />
+                        <ListItemText primary={"Admin Panel"} />
                     </MenuItem>}
                 <MenuItem onClick={() => handleLogout()} sx={{ color: colors.red[500] }}>
                     <ListItemIcon><LogoutIcon sx={{ color: colors.red[500] }} /></ListItemIcon>

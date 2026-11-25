@@ -51,10 +51,7 @@ export default function ViewProfile() {
                             <InfoBox loading={!user} title="Name" value={user && user.name} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <InfoBox loading={!user} title="Phone Number" value={user && (user.phone_number ? user.phone_number : "Not Provided")} />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <InfoBox loading={!user} title="Birthday" value={user && (user.birthdate ? moment(user.birthdate).format("DD/MM/YYYY") : "Not Provided")} />
+                            <InfoBox loading={!user} title="Email Address" value={user && (user.email ? user.email : "Not Provided")} />
                         </Grid>
                     </Grid>
                 </CardContent>

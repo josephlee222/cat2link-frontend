@@ -86,37 +86,16 @@ export default function Login() {
             data.username = data.username.trim();
             data.password = data.password.trim();
 
-
-
-            signIn({
-                username: data.username,
-                password: data.password,
-            }).then((res) => {
-                console.log(res);
-                handleLoginSuccess(res);
+            http.post("/auth/login", data).then((res) => {
+                if (res.status === 200) {
+                    console.log(res);
+                    handleLoginSuccess(res);
+                }
             }).catch((err) => {
-                console.log(err);
-                enqueueSnackbar("Login failed! " + err.message, { variant: "error" });
-                setLoading(false);
-            })
-
-
-            // http.post("/User/Login", data).then((res) => {
-            //     if (res.status === 200) {
-            //         handleLoginSuccess(res);
-            //     } else {
-            //         enqueueSnackbar("Login failed! Check your e-mail and password.", { variant: "error" });
-            //         setLoading(false);
-            //     }
-            // }).catch((err) => {
-            //     if (err.response) {
-            //         enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
-            //         setLoading(false);
-            //     } else {
-            //         enqueueSnackbar("Login failed! " + err.message, { variant: "error" });
-            //         setLoading(false);
-            //     }
-            // })
+                enqueueSnackbar("Failed to login! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+            )
         }
 
     })
@@ -320,54 +299,13 @@ export default function Login() {
     }
 
     function handleLoginSuccess(res) {
-        if (!res.isSignedIn) {
-            // Check next steps
-            if (res.nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED") {
-                // Open dialog to change password
-                enqueueSnackbar("Please change your password to continue.", { variant: "info" });
-                handleSetPasswordDialogOpen();
-            } else if (res.nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_TOTP_CODE") {
-                // Open dialog to verify TOTP code
-                enqueueSnackbar("Please verify your identity with your authenticator app.", { variant: "info" });
-                setVerifyDialog(true);
-            } else {
-                // Show unimplemented error
-                enqueueSnackbar("Login failed! Unimplemented error.", { variant: "error" });
-                console.log(res);
-                setLoading(false);
-            }
-        } else {
-            // Store token in local storage
-            //localStorage.setItem("token", res.data.token);
-            // Load user data
-            fetchUserAttributes().then((attributes) => {
-                setUser(attributes);
-                fetchAuthSession().then((session) => {
-                    var token = session.tokens.accessToken.toString();
-                    setUserRoles(session.tokens.accessToken.payload["cognito:groups"] ? session.tokens.accessToken.payload["cognito:groups"] : []);
-                    const existingConfig = Amplify.getConfig();
-                    Amplify.configure(existingConfig, {
-                        API: {
-                            REST: {
-                                headers: async () => {
-                                    return { Authorization: token };
-                                }
-                            }
-                        }
-                    });
-                    localStorage.setItem("token", token);
-                    setToken(token);
-                    enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
-                    navigate("/")
-                }).catch((e) => {
-                    console.log(e);
-                    enqueueSnackbar("Failed to load user data! " + e.message, { variant: "error" });
-                })
-            }).catch((e) => {
-                console.log(e);
-                enqueueSnackbar("Failed to load user data! " + e.message, { variant: "error" });
-            })
-        }
+        // Store token in local storage
+        localStorage.setItem("token", res.data.access_token);
+
+        // Load user data
+        setUser(res.data.user);
+        enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+        navigate("/");
     }
 
 
