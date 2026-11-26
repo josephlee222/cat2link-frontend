@@ -1,6 +1,6 @@
 // Navbar and footer should be added here
 
-import React, { useState, createContext, useEffect } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import UserRoutes from './pages/UserRoutes';
 import AdminRoutes from './pages/Admin/AdminRoutes';
@@ -10,8 +10,7 @@ import { useSnackbar } from 'notistack';
 import { Home } from '@mui/icons-material';
 import Footer from './components/Footer';
 import { Box } from '@mui/material';
-import { fetchUserAttributes, getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
-import { Amplify } from 'aws-amplify';
+import { AuthProvider } from './functions/AuthProvider';
 
 export const AppContext = createContext(null);
 function App() {
@@ -29,6 +28,8 @@ function App() {
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
+        // Check if token cookie exists and refresh it if necessary
+
         http.get("/auth/refresh").then((res) => {
             const data = res.data;
             setToken(data.access_token);
@@ -37,16 +38,14 @@ function App() {
             setUserLoading(false);
         }).catch((e) => {
             console.log(e);
-            enqueueSnackbar("Failed to refresh token", { variant: "error" });
+            console.log("Failed to refresh token");
             setUserLoading(false);
         });
     }, [])
 
     return (
-        <>
+        <AuthProvider>
             <AppContext.Provider value={{
-                user,
-                setUser,
                 userRoles,
                 setUserRoles,
                 userLoading,
@@ -77,7 +76,7 @@ function App() {
                     <Footer />
                 </Box>
             </AppContext.Provider>
-        </>
+        </AuthProvider>
 
     );
 }

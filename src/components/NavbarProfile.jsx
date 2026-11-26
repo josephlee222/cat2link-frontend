@@ -2,15 +2,14 @@ import { useState, useContext } from "react";
 import { Box, IconButton, ListItemIcon, ListItemText, Divider, Typography, colors, Menu, MenuItem } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture";
-import { AppContext } from "../App";
-
+import { useAuth } from "../functions/AuthProvider";
 import LogoutIcon from '@mui/icons-material/LogoutRounded';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 import { enqueueSnackbar } from "notistack";
 import http from "../http";
 
 export default function NavbarProfile() {
-    const { user, setUser, userRoles } = useContext(AppContext);
+    const { user, setUser } = useAuth();
     const [isPopoverOpen, setIsPopoverOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
     const isStaff = user.role == "admin";

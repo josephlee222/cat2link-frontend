@@ -8,10 +8,12 @@ import NavbarNotifications from "./NavbarNotifications";
 import { WebRounded, DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SearchRounded, SettingsRounded, TerminalRounded, CategoryRounded } from "@mui/icons-material";
 import { HomeRounded } from "@mui/icons-material";
 import StaffMenu from "./StaffMenu";
+import { useAuth } from "../functions/AuthProvider";
 
 
 export default function Navbar() {
-    const { user, adminPage, userLoading, title } = useContext(AppContext);
+    const { adminPage, userLoading, title } = useContext(AppContext);
+    const { user } = useAuth();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [isAdminDrawerOpen, setIsAdminDrawerOpen] = useState(false)
     const theme = useTheme()

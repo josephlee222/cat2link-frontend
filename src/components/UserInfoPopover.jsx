@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useState } from 'react'
-import { Typography, Stack, IconButton, Button, Menu, ListItem, MenuItem, ListItemIcon, Divider, ListItemText, Box, CircularProgress, Dialog, useMediaQuery, useTheme, DialogTitle, Grid2, DialogContent, DialogActions } from '@mui/material'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Typography, Button, Menu, MenuItem, ListItemIcon, Divider, ListItemText, Box, CircularProgress, Dialog, useMediaQuery, useTheme, DialogTitle, Grid2, DialogContent, DialogActions } from '@mui/material'
 import { useNavigate, Link } from 'react-router-dom';
-import { ForestRounded, DeviceThermostatRounded, SettingsRounded, AddRounded, GrassRounded, InfoRounded, GroupRounded, PersonAddRounded, MapRounded, DashboardRounded, TaskAlt, TaskAltRounded, WarningRounded, EmailRounded, PhoneRounded, CloseRounded } from '@mui/icons-material';
+import { EmailRounded, PhoneRounded, CloseRounded } from '@mui/icons-material';
 import { get } from 'aws-amplify/api';
 import ProfilePicture from './ProfilePicture';
 

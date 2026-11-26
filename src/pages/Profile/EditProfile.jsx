@@ -13,9 +13,10 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { updatePassword, updateUserAttributes, fetchUserAttributes } from "aws-amplify/auth";
 import titleHelper from "../../functions/helpers";
+import { useAuth } from "../../functions/AuthProvider";
 
 export default function EditProfile() {
-    const { user, setUser } = useContext(AppContext);
+    const { user, setUser } = useAuth();
     const { activePage, setActivePage } = useContext(ProfileContext);
     const [editProfileloading, setEditProfileLoading] = useState(false);
     const navigate = useNavigate();

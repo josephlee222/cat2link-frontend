@@ -9,11 +9,11 @@ import { useFormik } from 'formik';
 import { ArrowBackRounded, Edit, InfoRounded, SaveRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminUsersRoutes';
 import ProfilePicture from '../../../components/ProfilePicture';
-import { AppContext } from '../../../App';
 import titleHelper from '../../../functions/helpers';
 import { get, put } from 'aws-amplify/api';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../../functions/AuthProvider';
 
 export default function EditUser() {
     const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ export default function EditUser() {
     const { setActivePage } = useContext(CategoryContext);
     const { id: userId } = useParams();
     const [user, setUser] = useState(null);
-    const { user: currentUser, setUser: setCurrentUser } = useContext(AppContext);
+    const { user: currentUser, setUser: setCurrentUser } = useAuth();
     titleHelper("Edit User")
 
     function handleLogout() {

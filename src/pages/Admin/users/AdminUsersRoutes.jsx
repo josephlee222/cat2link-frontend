@@ -1,18 +1,16 @@
 import { useContext, useEffect, createContext, useState } from 'react'
-import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import NotFound from '../../errors/NotFound'
 import Test from '../../Test'
-import { AppContext } from '../../../App'
 import { LayoutContext } from '../AdminRoutes'
 import { useSnackbar } from 'notistack'
-import { Box, Button, Tabs, Tab, Typography, useTheme } from '@mui/material'
+import { Box, Tabs, Tab, useTheme } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAddRounded';
-import { CellTowerRounded, List } from '@mui/icons-material'
+import { List } from '@mui/icons-material'
 import ViewUsers from './ViewUsers'
 import CreateUser from './CreateUser'
 import EditUser from './EditUser'
 import BroadcastNotification from './BroadcastNotification'
-import { validateStaffRoles } from '../../../functions/user'
 
 export const CategoryContext = createContext(null);
 export default function AdminUsersRoutes() {
@@ -24,12 +22,12 @@ export default function AdminUsersRoutes() {
 
     useEffect(() => {
         setContainerWidth("xl")
-        validateStaffRoles(["Admin"]).then((isAdmin) => {
-            if (!isAdmin) {
-                enqueueSnackbar("You must be an admin to view this page", { variant: "error" });
-                navigate("/")
-            }
-        })
+        // validateStaffRoles(["Admin"]).then((isAdmin) => {
+        //     if (!isAdmin) {
+        //         enqueueSnackbar("You must be an admin to view this page", { variant: "error" });
+        //         navigate("/")
+        //     }
+        // })
     }, [])
 
     const handleTabChange = (event, newValue) => {

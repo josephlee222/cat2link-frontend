@@ -1,26 +1,22 @@
 import { useContext, useEffect, useState, createContext } from 'react'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import NotFound from '../errors/NotFound'
-import Test from '../Test'
 import { AppContext } from '../../App'
 import { useSnackbar } from 'notistack'
-import { Card, CardContent, Container, Grid, Box, Typography, Button, Dialog, DialogTitle, DialogActions, DialogContent, IconButton, DialogContentText, Stack, Tooltip, Alert, Skeleton, Avatar } from '@mui/material'
+import { Card, CardContent, Container, Grid, Box, Typography, Button, Dialog, DialogTitle, DialogActions, DialogContent, IconButton, DialogContentText, Stack, Tooltip, Skeleton, Avatar } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import ProfilePicture from '../../components/ProfilePicture'
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import TodayRoundedIcon from '@mui/icons-material/TodayRounded';
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded';
-import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 import CloseIcon from '@mui/icons-material/CloseRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import PublicIcon from '@mui/icons-material/PublicRounded';
 import FileUploadIcon from '@mui/icons-material/FileUploadRounded';
 import PageHeader from '../../components/PageHeader'
-import { validateUser } from "../../functions/user";
 import { updateUserAttributes, fetchUserAttributes } from 'aws-amplify/auth'
 import http from "../../http";
 import md5 from "md5";
-
+import { useAuth } from "../../functions/AuthProvider";
 import ViewProfile from './ViewProfile'
 import ViewSecurity from './ViewSecurity'
 import EditProfile from './EditProfile'
@@ -28,7 +24,8 @@ import EditProfile from './EditProfile'
 export const ProfileContext = createContext(null);
 
 export default function ProfileRoutes() {
-    const { setAdminPage, user, setUser } = useContext(AppContext);
+    const { setAdminPage } = useContext(AppContext);
+    const { user, setUser } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
     const [activePage, setActivePage] = useState(null);
     const navigate = useNavigate();

@@ -1,19 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, Card, CardContent, Grid, Typography, Button } from "@mui/material";
+import { Card, CardContent, Grid } from "@mui/material";
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
-import { PersonRounded, NewspaperRounded, CloseRounded, BadgeRounded } from "@mui/icons-material";
+import { PersonRounded } from "@mui/icons-material";
 import InfoBox from "../../components/InfoBox";
 import http from "../../http";
 import { useSnackbar } from "notistack";
-import { LoadingButton } from "@mui/lab";
-import moment from "moment";
 import titleHelper from "../../functions/helpers";
+import { useAuth } from "../../functions/AuthProvider";
 
 
 export default function ViewProfile() {
-    const { user, setUser } = useContext(AppContext);
+    const { user, setUser } = useAuth();
     const { setActivePage } = useContext(ProfileContext);
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Button, Card, Grid, CardContent, Box, TextField, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, useTheme, Stack, Stepper, Step, StepLabel } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -6,21 +6,14 @@ import CardTitle from "../components/CardTitle";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSnackbar } from "notistack";
-import LoginIcon from '@mui/icons-material/LoginRounded';
-import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
-import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
-import GoogleIcon from '@mui/icons-material/Google';
-import CloseIcon from '@mui/icons-material/CloseRounded';
-import LockResetIcon from '@mui/icons-material/LockResetRounded';
-import RefreshIcon from '@mui/icons-material/RefreshRounded';
 import http from "../http";
 import { AppContext } from "../App";
 import PageHeader from "../components/PageHeader";
 import titleHelper from "../functions/helpers";
 import { coerceToBase64Url } from "../functions/fidoHelpers";
-import { signIn, confirmSignIn, fetchUserAttributes, resetPassword, confirmResetPassword, fetchAuthSession } from "aws-amplify/auth";
-import { Amplify } from "aws-amplify";
-import { ArrowForwardRounded, CancelRounded, CloseRounded } from "@mui/icons-material";
+import { confirmSignIn, resetPassword, confirmResetPassword } from "aws-amplify/auth";
+import { ArrowForwardRounded, CloseRounded, LoginRounded, PasswordRounded, LockResetRounded, RefreshRounded } from "@mui/icons-material";
+import { useAuth } from "../functions/AuthProvider";
 
 
 export default function Login() {
@@ -37,7 +30,8 @@ export default function Login() {
     const [verifyLoading, setVerifyLoading] = useState(false);
     const [loginType, setLoginType] = useState("email");
     const { enqueueSnackbar } = useSnackbar();
-    const { setUser, setConnection, setNotifications, setUserRoles, setToken } = useContext(AppContext);
+    const { setConnection, setNotifications, setUserRoles, setToken } = useContext(AppContext);
+    const { setUser } = useAuth();
     const navigate = useNavigate();
     const theme = useTheme();
     titleHelper("Login");
@@ -311,7 +305,7 @@ export default function Login() {
 
     return (
         <>
-            <PageHeader icon={LoginIcon} title="Welcome Back" navTitle="Login" />
+            <PageHeader icon={LoginRounded} title="Welcome Back" navTitle="Login" />
             <Container sx={{ mt: "2rem", mb: "1rem" }} maxWidth="sm">
                 {/* <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
@@ -325,7 +319,7 @@ export default function Login() {
                     <Grid item xs={12} md={12}>
                         <Card>
                             <CardContent>
-                                <CardTitle title="Login with Username" icon={<PasswordRoundedIcon />} />
+                                <CardTitle title="Login with Username" icon={<PasswordRounded />} />
                                 <Box component="form" onSubmit={formik.handleSubmit}>
                                     <TextField
                                         fullWidth
@@ -418,8 +412,8 @@ export default function Login() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleResetPasswordDialogClose} startIcon={<CloseIcon />}>Cancel</Button>
-                        <LoadingButton type="submit" loadingPosition="start" loading={resetLoading} variant="text" color="primary" startIcon={<LockResetIcon />}>Reset</LoadingButton>
+                        <Button onClick={handleResetPasswordDialogClose} startIcon={<CloseRounded />}>Cancel</Button>
+                        <LoadingButton type="submit" loadingPosition="start" loading={resetLoading} variant="text" color="primary" startIcon={<LockResetRounded />}>Reset</LoadingButton>
                     </DialogActions>
                 </Box>
 
@@ -458,22 +452,22 @@ export default function Login() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleResetPasswordDialogClose} startIcon={<CloseIcon />}>Cancel</Button>
-                        <LoadingButton type="submit" loadingPosition="start" loading={resetLoading} variant="text" color="primary" startIcon={<LockResetIcon />}>Confirm Reset</LoadingButton>
+                        <Button onClick={handleResetPasswordDialogClose} startIcon={<CloseRounded />}>Cancel</Button>
+                        <LoadingButton type="submit" loadingPosition="start" loading={resetLoading} variant="text" color="primary" startIcon={<LockResetRounded />}>Confirm Reset</LoadingButton>
                     </DialogActions>
                 </Box>
 
                 <Box display={resetStep == 2 ? "initial" : "none"}>
                     <DialogContent sx={{ paddingTop: 0 }}>
                         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-                            <LockResetIcon sx={{ fontSize: "3rem", color: theme.palette.success.main }} />
+                            <LockResetRounded sx={{ fontSize: "3rem", color: theme.palette.success.main }} />
                             <DialogContentText sx={{ textAlign: "center", marginTop: "0.5rem" }}>
                                 Password reset successful!<br />You can now login with your new password.
                             </DialogContentText>
                         </Box>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleResetPasswordDialogClose} startIcon={<CloseIcon />}>Done</Button>
+                        <Button onClick={handleResetPasswordDialogClose} startIcon={<CloseRounded />}>Done</Button>
                     </DialogActions>
                 </Box>
             </Dialog>
@@ -500,8 +494,8 @@ export default function Login() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleSetPasswordDialogClose} startIcon={<CloseIcon />}>Cancel</Button>
-                        <LoadingButton type="submit" loadingPosition="start" loading={setPasswordLoading} variant="text" color="primary" startIcon={<LockResetIcon />}>Set Password</LoadingButton>
+                        <Button onClick={handleSetPasswordDialogClose} startIcon={<CloseRounded />}>Cancel</Button>
+                        <LoadingButton type="submit" loadingPosition="start" loading={setPasswordLoading} variant="text" color="primary" startIcon={<LockResetRounded />}>Set Password</LoadingButton>
                     </DialogActions>
                 </Box>
             </Dialog>
@@ -561,8 +555,8 @@ export default function Login() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleResendDialogClose} startIcon={<CloseIcon />}>Cancel</Button>
-                        <LoadingButton type="submit" loadingPosition="start" loading={resendLoading} variant="text" color="primary" startIcon={<RefreshIcon />}>Resend E-mail</LoadingButton>
+                        <Button onClick={handleResendDialogClose} startIcon={<CloseRounded />}>Cancel</Button>
+                        <LoadingButton type="submit" loadingPosition="start" loading={resendLoading} variant="text" color="primary" startIcon={<RefreshRounded />}>Resend E-mail</LoadingButton>
                     </DialogActions>
                 </Box>
             </Dialog>

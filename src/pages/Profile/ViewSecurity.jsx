@@ -15,11 +15,12 @@ import { setUpTOTP, verifyTOTPSetup, updateMFAPreference, fetchMFAPreference } f
 import QRCode from "qrcode";
 import { useTheme } from "@emotion/react";
 import titleHelper from "../../functions/helpers";
+import { useAuth } from "../../functions/AuthProvider";
 
 
 export default function ViewSecurity() {
     const { setActivePage } = useContext(ProfileContext);
-    const { user } = useContext(AppContext);
+    const { user } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
     const [passkeyLoading, setPasskeyLoading] = useState(false);
     const [PasskeyDialog, setPasskeyDialog] = useState(false);
