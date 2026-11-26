@@ -22,9 +22,11 @@ export default function AdminRoutes() {
 
     useEffect(() => {
         setAdminPage(true)
-        if (!loading && user.role !== "admin") {
-            enqueueSnackbar("You must be an admin to view this page", { variant: "error" });
-            navigate("/");
+        if (!loading) {
+            if (!user || user.role !== "admin") {
+                enqueueSnackbar("You must be an admin to view this page", { variant: "error" });
+                navigate("/");
+            }
         }
     }, [])
 
