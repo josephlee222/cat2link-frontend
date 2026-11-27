@@ -7,7 +7,7 @@ import { SettingsRounded, AddRounded, InfoRounded, GroupRounded, PersonAddRounde
 
 export default function StaffMenu(props) {
     const navigate = useNavigate()
-    const [isFarmMenuOpen, setIsFarmMenuOpen] = useState(false)
+    const [isProjectsMenuOpen, setIsProjectsMenuOpen] = useState(false)
     const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false)
     const [navbarAnchorEl, setNavbarAnchorEl] = useState(null)
 
@@ -40,9 +40,9 @@ export default function StaffMenu(props) {
         },
     }
 
-    const handleFarmClick = (event) => {
+    const handleProjectsClick = (event) => {
         setNavbarAnchorEl(event.currentTarget)
-        setIsFarmMenuOpen(true)
+        setIsProjectsMenuOpen(true)
     }
 
     const handleSettingsClick = (event) => {
@@ -80,7 +80,7 @@ export default function StaffMenu(props) {
 
         const handleResize = () => {
             if (window.innerWidth < 600) {
-                setIsFarmMenuOpen(false)
+                setIsProjectsMenuOpen(false)
                 setIsSettingsMenuOpen(false)
             }
         }
@@ -97,36 +97,36 @@ export default function StaffMenu(props) {
     return (
         <>
             <Stack direction="row" spacing={1}>
-                <Button sx={{ fontWeight: 700 }} startIcon={<CategoryRounded />} variant="text" color="inherit" onClick={handleFarmClick}>Items</Button>
+                <Button sx={{ fontWeight: 700 }} startIcon={<CategoryRounded />} variant="text" color="inherit" onClick={handleProjectsClick}>Projects</Button>
                 <Button sx={{ fontWeight: 700 }} startIcon={<SettingsRounded />} variant="text" color="inherit" onClick={handleSettingsClick}>Settings</Button>
             </Stack>
             <Menu
                 anchorEl={navbarAnchorEl}
-                open={isFarmMenuOpen}
-                onClose={() => setIsFarmMenuOpen(false)}
-                onClick={() => setIsFarmMenuOpen(false)}
+                open={isProjectsMenuOpen}
+                onClose={() => setIsProjectsMenuOpen(false)}
+                onClick={() => setIsProjectsMenuOpen(false)}
                 slotProps={menuSlotProps}
             >
                 <MenuItem onClick={() => navigate("/staff")}>
                     <ListItemIcon>
                         <HomeRounded />
                     </ListItemIcon>
-                    <ListItemText primary="Home Dashboard" sx={{marginRight: "2rem"}} />
+                    <ListItemText primary="Admin Home" sx={{marginRight: "2rem"}} />
                     <Typography variant="caption" color="text.secondary">Ctrl + Alt + O</Typography>
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={() => navigate("/staff/items")}>
+                <MenuItem onClick={() => navigate("/staff/projects")}>
                     <ListItemIcon>
                         <FlagRounded />
                     </ListItemIcon>
-                    <ListItemText primary="Manage Items" sx={{marginRight: "2rem"}}/>
+                    <ListItemText primary="Manage Projects" sx={{marginRight: "2rem"}}/>
                     <Typography variant="caption" color="text.secondary">Ctrl + Alt + I</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => navigate("/staff/items?new=true")}>
+                <MenuItem onClick={() => navigate("/staff/projects?new=true")}>
                     <ListItemIcon>
                         <AddRounded />
                     </ListItemIcon>
-                    <ListItemText primary="Add Found Item" />
+                    <ListItemText primary="Add New Project" />
                 </MenuItem>
             </Menu>
             <Menu
@@ -154,7 +154,7 @@ export default function StaffMenu(props) {
                     <ListItemIcon>
                         <InfoRounded />
                     </ListItemIcon>
-                    <ListItemText primary="About ReclaimIt" />
+                    <ListItemText primary="About Cat2.Link" />
                 </MenuItem>
             </Menu>
         </>

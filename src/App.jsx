@@ -1,9 +1,8 @@
 // Navbar and footer should be added here
 
-import { useState, createContext, useEffect } from 'react';
+import { useState, createContext, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import UserRoutes from './pages/UserRoutes';
-import AdminRoutes from './pages/Admin/AdminRoutes';
 import Navbar from './components/Navbar';
 import http from './http';
 import { useSnackbar } from 'notistack';
@@ -11,6 +10,9 @@ import { Home } from '@mui/icons-material';
 import Footer from './components/Footer';
 import { Box } from '@mui/material';
 import { AuthProvider } from './functions/AuthProvider';
+
+// Dynamically import admin routes
+const AdminRoutes = lazy(() => import('./pages/Admin/AdminRoutes'));
 
 export const AppContext = createContext(null);
 function App() {
@@ -68,10 +70,19 @@ function App() {
                 <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: "100%" }}>
                     <Navbar />
                     <Box sx={{ flexGrow: 1 }}>
-                        <Routes location={location}>
-                            <Route path='*' element={<UserRoutes />} />
-                            <Route path='/staff/*' element={<AdminRoutes />} />
-                        </Routes>
+                        <Suspense fallback={
+                            <div
+                                style={{height: "100vh", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "nunito", flexDirection: "column"}}>
+                                <img src="/icon.png" height="100px" style={{marginTop: "2rem", marginBottom: "1rem"}} />
+                                <img src="/loading.gif" height="24px" />
+                                <h3>Cat2.Link - Personal Portfolio</h3>
+                            </div>
+                        }>
+                            <Routes location={location}>
+                                <Route path='*' element={<UserRoutes />} />
+                                <Route path='/staff/*' element={<AdminRoutes />} />
+                            </Routes>
+                        </Suspense>
                     </Box>
                     <Footer />
                 </Box>

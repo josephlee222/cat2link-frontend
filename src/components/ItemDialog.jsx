@@ -107,7 +107,7 @@ export default function ItemDialog(props) {
                 editFormik.setValues({
                     name: result.name,
                     description: result.description,
-                    categoryId: result.categoryId,
+                    categoryId: result.category.id,
                 })
                 setLoading(false)
             }
@@ -144,19 +144,18 @@ export default function ItemDialog(props) {
     }
 
     const handleGetCategories = async () => {
-        var itemReq = get({
-            apiName: "midori",
-            path: "/categories",
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setCategory(data)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load item categories", { variant: "error" })
-        }
+        http.get("/categories/").then((res) => {
+            if (res.status === 200) {
+                var result = res.data
+                console.log(result.reverse())
+                setCategory(result)
+                setLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load categories! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+        )
     }
 
     const handleOptionsClick = (e) => {

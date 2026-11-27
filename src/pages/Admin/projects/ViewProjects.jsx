@@ -11,7 +11,7 @@ import { AddRounded, CloseRounded, RefreshRounded, UploadFileRounded, Visibility
 import titleHelper from '../../../functions/helpers';
 import { get, post, del } from "aws-amplify/api";
 import { enqueueSnackbar } from 'notistack';
-import { CategoryContext } from './ItemRoutes';
+import { CategoryContext } from './ProjectRoutes';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -22,9 +22,9 @@ import 'filepond/dist/filepond.min.css';
 import CardTitle from '../../../components/CardTitle';
 import ItemDialog from '../../../components/ItemDialog';
 
-function ViewItems() {
+function ViewProjects() {
 
-    const [items, setItems] = useState([])
+    const [projects, setProjects] = useState([])
     const [loading, setLoading] = useState(true)
     const [categoryLoading, setCategoryLoading] = useState(true)
     const [deleteLoading, setDeleteLoading] = useState(null)
@@ -42,28 +42,27 @@ function ViewItems() {
     const filepondRef = useRef(null)
     const navigate = useNavigate()
     const theme = useTheme()
-    titleHelper("Manage Items")
+    titleHelper("Manage Projects")
 
     registerPlugin(FilePondPluginImagePreview);
     registerPlugin(FilePondPluginFileValidateType);
 
     const columns = [
-        { field: 'name', headerName: 'Item Name', width: 200 },
-        { field: 'description', headerName: 'Item Description', minWidth: 150, flex: 1 },
-        { field: 'categoryName', headerName: 'Item Category', minWidth: 150 },
-        { field: 'created_at', headerName: 'Found On', type: 'datetime', minWidth: 150, valueGetter: (value) => new Date(value).toLocaleDateString() },
+        { field: 'name', headerName: 'Project Name', width: 200 },
+        { field: 'description', headerName: 'Short Description', minWidth: 150, flex: 1 },
+        { field: 'category_name', headerName: 'Category', minWidth: 150 },
         {
             field: 'actions', headerName: "Actions", type: 'actions', width: 80, getActions: (params) => [
                 <GridActionsCellItem
                     icon={<VisibilityRounded />}
-                    label="View Item"
+                    label="View Project"
                     onClick={() => {
                         handleDetailsOpen(params.row.id)
                     }}
                 />,
                 <GridActionsCellItem
                     icon={<DeleteIcon />}
-                    label="Delete Item"
+                    label="Delete Project"
                     onClick={() => {
                         setDeleteItem(params.row)
                         handleDeleteItemOpen()
@@ -80,15 +79,15 @@ function ViewItems() {
             description: ""
         },
         validationSchema: yup.object({
-            name: yup.string().required("Item name is required"),
-            categoryId: yup.number().required("Item category is required"),
-            description: yup.string().required("Item description is required")
+            name: yup.string().required("Project name is required"),
+            categoryId: yup.number().required("Project category is required"),
+            description: yup.string().required("Project description is required")
         }),
         onSubmit: async (values) => {
             setCreateLoading(true)
             var itemReq = post({
                 apiName: "midori",
-                path: "/admin/items",
+                path: "/admin/projects",
                 options: {
                     body: {
                         ...values
@@ -99,8 +98,8 @@ function ViewItems() {
             try {
                 var res = await itemReq.response
                 var data = await res.body.json()
-                // upload images using filepond via API env (/admin/items/{id}/attachments)
-                setFilepondUrl(import.meta.env.VITE_API_URL + "/admin/items/" + data.id + "/attachments")
+                // upload images using filepond via API env (/admin/projects/{id}/attachments)
+                setFilepondUrl(import.meta.env.VITE_API_URL + "/admin/projects/" + data.id + "/attachments")
                 filepondRef.current.processFiles().then(() => {
                     console.log("Files processed")
                     enqueueSnackbar("Item created successfully", { variant: "success" })
@@ -160,7 +159,7 @@ function ViewItems() {
         setDeleteLoading(true)
         var itemReq = del({
             apiName: "midori",
-            path: "/admin/items/" + deleteItem.id,
+            path: "/admin/projects/" + deleteItem.id,
         })
 
         try {
@@ -177,39 +176,34 @@ function ViewItems() {
     }
 
     const handleGetCategories = async () => {
-        var itemReq = get({
-            apiName: "midori",
-            path: "/categories",
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setCategory(data)
-            setCategoryLoading(false)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load item categories", { variant: "error" })
-        }
+        http.get("/categories/").then((res) => {
+            if (res.status === 200) {
+                var result = res.data
+                console.log(result.reverse())
+                setCategory(result)
+                setLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load categories! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+        )
     }
 
     const handleGetItems = async () => {
         setLoading(true)
-        var itemReq = get({
-            apiName: "midori",
-            path: "/items",
-        })
-
-        try {
-            var res = await itemReq.response
-            var data = await res.body.json()
-            setItems(data)
-            setLoading(false)
-        } catch (err) {
-            console.log(err)
-            enqueueSnackbar("Failed to load items", { variant: "error" })
-            setLoading(false)
-        }
+        http.get("/admin/projects/").then((res) => {
+            if (res.status === 200) {
+                var result = res.data
+                console.log(result.reverse())
+                setProjects(result)
+                setLoading(false)
+            }
+        }).catch((err) => {
+                enqueueSnackbar("Failed to load projects! " + err.response.data.message, { variant: "error" });
+                setLoading(false)
+            }
+        )
     }
 
     const customToolbar = () => {
@@ -236,7 +230,7 @@ function ViewItems() {
         <>
             <Box sx={{ marginY: "1rem" }}>
                 <Box display={{ xs: "none", md: "block" }}>
-                    <Typography variant="h4" my={"2rem"} fontWeight={700}>Manage Items</Typography>
+                    <Typography variant="h4" my={"2rem"} fontWeight={700}>Manage Projects</Typography>
                     <Divider sx={{ mb: "1rem" }} />
                 </Box>
                 <Box display={"flex"}>
@@ -244,7 +238,7 @@ function ViewItems() {
                     <LoadingButton loadingPosition='start' variant="outlined" startIcon={<RefreshRounded />} onClick={handleGetItems} loading={loading} sx={{ ml: "1rem" }}>Refresh</LoadingButton>
                 </Box>
                 <DataGrid
-                    rows={items}
+                    rows={projects}
                     columns={columns}
                     pageSize={10}
                     loading={loading}
@@ -254,10 +248,10 @@ function ViewItems() {
                 />
             </Box>
             <Dialog open={deleteItemDialog} onClose={handleDeleteItemClose}>
-                <DialogTitle>Delete Item</DialogTitle>
+                <DialogTitle>Delete Project</DialogTitle>
                 <DialogContent sx={{ paddingTop: 0 }}>
                     <DialogContentText>
-                        Are you sure you want to delete the item?
+                        Are you sure you want to delete the project?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -283,7 +277,7 @@ function ViewItems() {
                             <CloseRounded />
                         </IconButton>
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            Create Found Item
+                            Create Project
                         </Typography>
                         <LoadingButton autoFocus color="inherit" onClick={createItemFormik.handleSubmit} loading={createLoading} loadingPosition='start' startIcon={<AddRounded />}>
                             Create
@@ -297,7 +291,7 @@ function ViewItems() {
                                 fullWidth
                                 id="name"
                                 name="name"
-                                label="Item Name"
+                                label="Project Name"
                                 variant="outlined"
                                 value={createItemFormik.values.name}
                                 onChange={createItemFormik.handleChange}
@@ -312,7 +306,7 @@ function ViewItems() {
                                 fullWidth
                                 id="categoryId"
                                 name="categoryId"
-                                label="Item Category"
+                                label="Project Category"
                                 variant="outlined"
                                 value={createItemFormik.values.categoryId}
                                 onChange={createItemFormik.handleChange}
@@ -332,7 +326,7 @@ function ViewItems() {
                                 minRows={7}
                                 id="description"
                                 name="description"
-                                label="Description of the item (size, color, model, etc)"
+                                label="Project Description"
                                 variant="outlined"
                                 value={createItemFormik.values.description}
                                 onChange={createItemFormik.handleChange}
@@ -383,4 +377,4 @@ function ViewItems() {
     )
 }
 
-export default ViewItems
+export default ViewProjects

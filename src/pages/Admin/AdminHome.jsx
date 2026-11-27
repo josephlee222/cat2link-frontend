@@ -48,18 +48,18 @@ export default function AdminHome() {
 
 
 
-    titleHelper("Main Dashboard")
+    titleHelper("Admin Home")
 
     return (
         <>
             <Box my={"1rem"}>
                 <Card>
                     <CardContent>
-                        <CardTitle title="Staff Shortcuts" icon={<AppsRounded />} />
+                        <CardTitle title="Admin Menu" icon={<AppsRounded />} />
                         <Grid container spacing={2} mt={"0"}>
                             <Grid item xs={12} md={6}>
                                 <Card variant='draggable'>
-                                    <ButtonBase className={classes.outerDiv} component={Link} to="/staff/items" sx={{ width: "100%", justifyContent: 'start' }}>
+                                    <ButtonBase className={classes.outerDiv} component={Link} to="/staff/projects" sx={{ width: "100%", justifyContent: 'start' }}>
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <Stack direction={{ xs: "row", md: "column" }} alignItems={{ xs: "center", md: "initial" }} spacing={{ xs: "1rem", md: 1 }}>
                                                 <FlagRounded sx={{ width: { xs: "24px", sm: "36px" }, height: { xs: "24px", sm: "36px" } }} />
@@ -75,7 +75,7 @@ export default function AdminHome() {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <Card variant='draggable'>
-                                    <ButtonBase className={classes.outerDiv} component={Link} to="/staff/items?new=true" sx={{ width: "100%", justifyContent: 'start' }}>
+                                    <ButtonBase className={classes.outerDiv} component={Link} to="/staff/projects?new=true" sx={{ width: "100%", justifyContent: 'start' }}>
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <Stack direction={{ xs: "row", md: "column" }} alignItems={{ xs: "center", md: "initial" }} spacing={{ xs: "1rem", md: 1 }}>
                                                 <AddRounded sx={{ width: { xs: "24px", sm: "36px" }, height: { xs: "24px", sm: "36px" } }} />

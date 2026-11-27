@@ -12,8 +12,8 @@ import { useAuth } from "../functions/AuthProvider";
 
 
 export default function Navbar() {
-    const { adminPage, userLoading, title } = useContext(AppContext);
-    const { user } = useAuth();
+    const { adminPage, title } = useContext(AppContext);
+    const { user, loading } = useAuth();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [isAdminDrawerOpen, setIsAdminDrawerOpen] = useState(false)
     const theme = useTheme()
@@ -44,11 +44,11 @@ export default function Navbar() {
                                 {title}
                             </Typography>
                         </Box>
-                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px" }} animation="wave" />}
-                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px", display: { xs: "none", md: "initial" } }} animation="wave" />}
-                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px", display: { xs: "none", md: "initial" } }} animation="wave" />}
-                        {(!user && userLoading) && <Skeleton variant="circular" width={40} height={40} sx={{ m: "8px" }} animation="wave" />}
-                        {(!user && !userLoading) && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon />}>Login</Button>}
+                        {(!user && loading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && loading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px", display: { xs: "none", md: "initial" } }} animation="wave" />}
+                        {(!user && loading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px", display: { xs: "none", md: "initial" } }} animation="wave" />}
+                        {(!user && loading) && <Skeleton variant="circular" width={40} height={40} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && !loading) && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon />}>Login</Button>}
                         {/* {user && <NavbarCart />}
                         {user && <NavbarFriends />} */}
                         {/* {user && <NavbarNotifications />} */}
@@ -107,7 +107,7 @@ export default function Navbar() {
                     </ListItem>
                     <Divider sx={{ my: 1 }} />
                     <ListItem key={"Farms"} disablePadding>
-                        <ListItemButton LinkComponent={Link} to="/staff/items" onClick={() => setIsAdminDrawerOpen(false)}>
+                        <ListItemButton LinkComponent={Link} to="/staff/projects" onClick={() => setIsAdminDrawerOpen(false)}>
                             <ListItemIcon><ForestRounded /></ListItemIcon>
                             <ListItemText primary={"Projects"} />
                         </ListItemButton>

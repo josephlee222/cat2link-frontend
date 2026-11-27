@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack'
 import { Container } from '@mui/material'
 import AdminUsersRoutes from './users/AdminUsersRoutes'
 import AdminHome from './AdminHome'
-import ItemRoutes from './items/ItemRoutes'
+import ProjectRoutes from './projects/ProjectRoutes'
 
 export const LayoutContext = createContext(null);
 
@@ -37,7 +37,7 @@ export default function AdminRoutes() {
                     <Routes>
                         <Route path="*" element={<NotFound />} />
                         <Route path="/" element={<AdminHome />} />
-                        <Route path="/items/*" element={<ItemRoutes />} />
+                        <Route path="/projects/*" element={<ProjectRoutes />} />
                         <Route path="/test" element={<Test />} />
                         <Route path="/users/*" element={<AdminUsersRoutes />} />
                     </Routes>
