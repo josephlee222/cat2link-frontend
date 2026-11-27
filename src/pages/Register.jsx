@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography } from "@mui/material";
+import { Container, Button, Card, Grid, CardContent, Box, TextField } from "@mui/material";
 import CardTitle from "../components/CardTitle";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,7 +13,7 @@ import http from "../http";
 import { AppContext } from "../App";
 import { LoadingButton } from "@mui/lab";
 import PageHeader from "../components/PageHeader";
-import { CelebrationRounded, PartyModeRounded } from "@mui/icons-material";
+
 import titleHelper from "../functions/helpers";
 
 export default function Register() {

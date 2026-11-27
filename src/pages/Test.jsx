@@ -1,12 +1,11 @@
-import { useEffect } from "react";
+
 import { Container, Button, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+
 import Infobox from "../components/InfoBox";
 import http from "../http";
 import titleHelper from "../functions/helpers";
 import PageHeader from "../components/PageHeader";
 import { QuestionMarkRounded } from "@mui/icons-material";
-import { get } from "aws-amplify/api";
 import { enqueueSnackbar } from "notistack";
 
 function Test() {
@@ -23,12 +22,7 @@ function Test() {
 
   const handleNormalTest = async () => {
     try {
-      var normal = get({
-        apiName: "midori",
-        path: "/test/normal",
-      })
-
-      var res = await normal.response
+      var res = await http.get("/test/normal")
       console.log(res)
       enqueueSnackbar("Normal test successful", { variant: "success" })
     } catch (err) {
@@ -40,12 +34,7 @@ function Test() {
 
   const handleAdminTest = async () => {
     try {
-      var normal = get({
-        apiName: "midori",
-        path: "/test/admin",
-      })
-
-      var res = await normal.response
+      var res = await http.get("/test/admin")
       console.log(res)
       enqueueSnackbar("Admin test successful", { variant: "success" })
     } catch (err) {
@@ -57,12 +46,7 @@ function Test() {
 
   const handleFarmerTest = async () => {
     try {
-      var normal = get({
-        apiName: "midori",
-        path: "/test/farmer",
-      })
-
-      var res = await normal.response
+      var res = await http.get("/test/farmer")
       console.log(res)
       enqueueSnackbar("Farmer test successful", { variant: "success" })
     } catch (err) {

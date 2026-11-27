@@ -1,12 +1,12 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Popover, Divider, Typography, Button, colors, Tooltip, Stack, Card, CardContent, Badge, Popper, Fade } from "@mui/material"
-import { Link, useNavigate } from "react-router-dom"
-import ProfilePicture from "./ProfilePicture";
+import { Box, IconButton, Popover, Typography, Button, Tooltip, Stack, Card, CardContent, Badge, Popper, Fade } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import { AppContext } from "../App";
 import CardTitle from "./CardTitle";
 
 import { enqueueSnackbar } from "notistack";
-import { Margin, NotificationsActiveRounded, NotificationsRounded, ShoppingBagRounded } from "@mui/icons-material";
+import { NotificationsActiveRounded, NotificationsRounded } from "@mui/icons-material";
 import http from "../http";
 
 export default function NavbarNotifications() {

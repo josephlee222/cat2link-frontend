@@ -1,9 +1,8 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Typography, Button, Menu, MenuItem, ListItemIcon, Divider, ListItemText, Box, CircularProgress, Dialog, useMediaQuery, useTheme, DialogTitle, Grid2, DialogContent, DialogActions } from '@mui/material'
 import { useNavigate, Link } from 'react-router-dom';
 import { EmailRounded, PhoneRounded, CloseRounded } from '@mui/icons-material';
-import { get } from 'aws-amplify/api';
+import http from '../http';
 import ProfilePicture from './ProfilePicture';
 
 export default function UserInfoPopover(props) {
@@ -23,15 +22,9 @@ export default function UserInfoPopover(props) {
     const handleGetUser = async () => {
         setLoading(true)
         setError(false)
-        var userdata = get({
-            apiName: "midori",
-            path: "/users/" + props.userId,
-        })
-
         try {
-            var res = await userdata.response
-            var userdata = await res.body.json()
-            setUser(userdata)
+            const res = await http.get("/users/" + props.userId)
+            setUser(res.data)
             setLoading(false)
         } catch {
             setLoading(false)

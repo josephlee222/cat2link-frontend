@@ -6,7 +6,6 @@ import { useSnackbar } from "notistack";
 import { LoadingButton } from '@mui/lab';
 import CardTitle from '../components/CardTitle';
 import ItemDialog from '../components/ItemDialog';
-import { get, post } from 'aws-amplify/api';
 import http from '../http';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -44,19 +43,8 @@ export default function ViewProjects() {
             setSubscribeLoading(true)
             data.email = data.email.trim()
 
-            var subReq = post({
-                apiName: "midori",
-                path: "/subscriptions?email=" + data.email,
-                options: {
-                    body: {
-                        categoryIds: data.categoryIds
-                    }
-                }
-            })
-
             try {
-                var res = await subReq.response
-                var data = await res.body.json()
+                await http.post("/subscriptions", { categoryIds: data.categoryIds }, { params: { email: data.email } })
                 setSubscribeLoading(false)
                 setSubscribeStep(2)
             } catch (err) {
@@ -80,14 +68,8 @@ export default function ViewProjects() {
             data.code = data.code.trim()
             data.email = subscribeFormik.values.email
 
-            var subReq = get({
-                apiName: "midori",
-                path: "/subscriptions/verify?email=" + data.email + "&token=" + data.code
-            })
-
             try {
-                var res = await subReq.response
-                var data = await res.body.json()
+                await http.get("/subscriptions/verify", { params: { email: data.email, token: data.code } })
                 setSubscribeLoading(false)
                 setSubscribeStep(3)
             } catch (err) {
@@ -174,14 +156,9 @@ export default function ViewProjects() {
         // TODO: Get categories user has subscribed to
         setSubscribeLoading(true)
 
-        var subReq = get({
-            apiName: "midori",
-            path: "/subscriptions?email=" + subscribeFormik.values.email
-        })
-
         try {
-            var res = await subReq.response
-            var data = await res.body.json()
+            const res = await http.get("/subscriptions", { params: { email: subscribeFormik.values.email } })
+            const data = res.data
             var subCategories = data.map((sub) => sub.categoryId)
             subscribeFormik.setFieldValue("categoryIds", subCategories)
             setSubscribeLoading(false)

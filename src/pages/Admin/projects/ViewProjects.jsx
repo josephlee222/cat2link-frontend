@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Card, CardContent, Typography, Divider, AppBar, Toolbar, IconButton, Grid2, TextField, useMediaQuery, useTheme, MenuItem } from '@mui/material'
+import { useEffect, useState, useContext, useRef } from 'react';
+import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Typography, Divider, AppBar, Toolbar, IconButton, Grid2, TextField, useMediaQuery, useTheme, MenuItem } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
+
 import { useNavigate } from 'react-router-dom';
 import http from '../../../http';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import { AddRounded, CloseRounded, RefreshRounded, UploadFileRounded, VisibilityRounded } from '@mui/icons-material';
 import titleHelper from '../../../functions/helpers';
-import { get, post, del } from "aws-amplify/api";
 import { enqueueSnackbar } from 'notistack';
 import { CategoryContext } from './ProjectRoutes';
 import { useFormik } from 'formik';
@@ -85,19 +84,9 @@ function ViewProjects() {
         }),
         onSubmit: async (values) => {
             setCreateLoading(true)
-            var itemReq = post({
-                apiName: "midori",
-                path: "/admin/projects",
-                options: {
-                    body: {
-                        ...values
-                    }
-                }
-            })
-
             try {
-                var res = await itemReq.response
-                var data = await res.body.json()
+                const res = await http.post("/admin/projects", values)
+                const data = res.data
                 // upload images using filepond via API env (/admin/projects/{id}/attachments)
                 setFilepondUrl(import.meta.env.VITE_API_URL + "/admin/projects/" + data.id + "/attachments")
                 filepondRef.current.processFiles().then(() => {
@@ -157,13 +146,8 @@ function ViewProjects() {
 
     const handleDeleteItem = async () => {
         setDeleteLoading(true)
-        var itemReq = del({
-            apiName: "midori",
-            path: "/admin/projects/" + deleteItem.id,
-        })
-
         try {
-            var res = await itemReq.response
+            await http.delete("/admin/projects/" + deleteItem.id)
             enqueueSnackbar("Item deleted successfully", { variant: "success" })
             setDeleteLoading(false)
             handleDeleteItemClose()

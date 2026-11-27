@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react';
 import { Menu, MenuItem, ListItemIcon, Divider, ListItemText, useTheme, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions, Button } from '@mui/material'
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { InfoRounded, CloseRounded, DeleteRounded, SwapHorizRounded } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
-import { del } from 'aws-amplify/api';
+import http from '../http';
 import { enqueueSnackbar } from 'notistack';
 
 export default function TaskPopover(props) {
@@ -23,13 +23,8 @@ export default function TaskPopover(props) {
 
     const handleDeleteTask = async () => {
         setDeleteLoading(true)
-        var deleteTask = del({
-            apiName: "midori",
-            path: "/tasks/" + props.taskId,
-        })
-
         try {
-            var res = await deleteTask.response
+            await http.delete("/tasks/" + props.taskId)
             setDeleteLoading(false)
             setDeleteOpen(false)
             props.onDelete()

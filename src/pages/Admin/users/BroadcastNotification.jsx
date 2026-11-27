@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography, Alert } from '@mui/material'
+import { useState, useEffect, useContext } from 'react';
+import { Card, CardContent, Box, TextField, Grid, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import AddIcon from '@mui/icons-material/Add';
+
+
 import CardTitle from "../../../components/CardTitle";
 import http from '../../../http'
 import { useSnackbar } from 'notistack'
-import { Form, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
-import { CellTowerRounded, PersonAddRounded, SendRounded } from '@mui/icons-material';
+import { CellTowerRounded, SendRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminUsersRoutes';
 import titleHelper from '../../../functions/helpers';
 

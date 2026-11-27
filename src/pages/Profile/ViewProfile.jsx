@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Card, CardContent, Grid } from "@mui/material";
-import { AppContext } from "../../App";
+
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
 import { PersonRounded } from "@mui/icons-material";

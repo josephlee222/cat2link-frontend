@@ -22,12 +22,6 @@ export default function AdminUsersRoutes() {
 
     useEffect(() => {
         setContainerWidth("xl")
-        // validateStaffRoles(["Admin"]).then((isAdmin) => {
-        //     if (!isAdmin) {
-        //         enqueueSnackbar("You must be an admin to view this page", { variant: "error" });
-        //         navigate("/")
-        //     }
-        // })
     }, [])
 
     const handleTabChange = (event, newValue) => {

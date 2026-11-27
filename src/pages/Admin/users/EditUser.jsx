@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react';
 import { Card, CardContent, Box, TextField, Grid, Typography, Skeleton, Stack, MenuItem, Button } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import CardTitle from "../../../components/CardTitle";
 import { useSnackbar } from 'notistack'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { ArrowBackRounded, Edit, InfoRounded, SaveRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminUsersRoutes';
 import ProfilePicture from '../../../components/ProfilePicture';
 import titleHelper from '../../../functions/helpers';
-import { get, put } from 'aws-amplify/api';
+import http from '../../../http';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../../functions/AuthProvider';
 
 export default function EditUser() {
@@ -34,14 +33,9 @@ export default function EditUser() {
     }
 
     const handleGetUser = async () => {
-        var userdata = get({
-            apiName: "midori",
-            path: "/admin/users/" + userId,
-        })
-
         try {
-            var res = await userdata.response
-            var data = await res.body.json()
+            const res = await http.get("/admin/users/" + userId)
+            const data = res.data
             setUser(data)
             var group = "normal"
 
@@ -87,24 +81,14 @@ export default function EditUser() {
             data.email = data.email.trim();
             data.name = data.name.trim();
 
-            var userdata = put({
-                apiName: "midori",
-                path: "/admin/users/" + userId,
-                options: {
-                    body: {
-                        ...data
-                    }
-                }
-            })
-
             try {
-                var res = await userdata.response
+                await http.put("/admin/users/" + userId, data)
                 enqueueSnackbar("User updated successfully!", { variant: "success" });
                 navigate("/staff/users")
                 setUpdateLoading(false);
             } catch (err) {
                 console.log(err)
-                var message = JSON.parse(err.response.body).Message
+                var message = err.response?.data?.message || err.response?.data?.Message || err.message
                 enqueueSnackbar("Unable to update user! " + message, { variant: "error" });
                 setUpdateLoading(false);
             }

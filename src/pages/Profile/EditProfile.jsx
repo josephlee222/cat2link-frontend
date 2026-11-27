@@ -11,7 +11,6 @@ import { useSnackbar } from "notistack";
 import http from "../../http";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { updatePassword, updateUserAttributes, fetchUserAttributes } from "aws-amplify/auth";
 import titleHelper from "../../functions/helpers";
 import { useAuth } from "../../functions/AuthProvider";
 
@@ -52,24 +51,7 @@ export default function EditProfile() {
             data.name = data.name.trim();
             data.phoneNumber = data.phoneNumber.trim();
             data.birthdate = data.birthdate.trim();
-
-            updateUserAttributes({
-                userAttributes: {
-                    name: data.name,
-                    phone_number: data.phoneNumber,
-                    birthdate: data.birthdate,
-                }
-            }).then(async () => {
-                const userAttributes = await fetchUserAttributes();
-                setUser(userAttributes);
-
-                enqueueSnackbar("Profile updated!", { variant: "success" });
-                setEditProfileLoading(false);
-                navigate("/profile")
-            }).catch((err) => {
-                enqueueSnackbar("Unable to update profile! " + err.message, { variant: "error" });
-                setEditProfileLoading(false);
-            })
+            
         }
     })
 
@@ -86,18 +68,6 @@ export default function EditProfile() {
         }),
         onSubmit: (data) => {
             setEditProfileLoading(true);
-
-            updatePassword({
-                oldPassword: data.password,
-                newPassword: data.newPassword,
-            }).then(() => {
-                enqueueSnackbar("Password changed!", { variant: "success" });
-                setEditProfileLoading(false);
-                navigate("/profile")
-            }).catch((err) => {
-                enqueueSnackbar("Unable to change password! " + err.message, { variant: "error" });
-                setEditProfileLoading(false);
-            })
         }
     })
 

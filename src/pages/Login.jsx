@@ -11,7 +11,6 @@ import { AppContext } from "../App";
 import PageHeader from "../components/PageHeader";
 import titleHelper from "../functions/helpers";
 import { coerceToBase64Url } from "../functions/fidoHelpers";
-import { confirmSignIn, resetPassword, confirmResetPassword } from "aws-amplify/auth";
 import { ArrowForwardRounded, CloseRounded, LoginRounded, PasswordRounded, LockResetRounded, RefreshRounded } from "@mui/icons-material";
 import { useAuth } from "../functions/AuthProvider";
 
@@ -103,18 +102,6 @@ export default function Login() {
         }),
         onSubmit: (data) => {
             setResetLoading(true);
-
-            resetPassword({
-                username: data.username
-            }).then((res) => {
-                enqueueSnackbar("Password reset e-mail sent!", { variant: "success" });
-                setResetUsername(data.username);
-                setResetStep(1);
-                setResetLoading(false);
-            }).catch((err) => {
-                enqueueSnackbar("Password reset failed! " + err.message, { variant: "error" });
-                setResetLoading(false);
-            })
         }
     })
 
@@ -130,18 +117,6 @@ export default function Login() {
         }),
         onSubmit: (data) => {
             setResetLoading(true);
-            confirmResetPassword({
-                username: resetUsername,
-                newPassword: data.password,
-                confirmationCode: data.code
-            }).then(() => {
-                enqueueSnackbar("Password reset successful!", { variant: "success" });
-                setResetLoading(false);
-                setResetStep(2);
-            }).catch((err) => {
-                enqueueSnackbar("Password reset failed! " + err.message, { variant: "error" });
-                setResetLoading(false);
-            })
         }
     })
 
@@ -182,17 +157,6 @@ export default function Login() {
         }),
         onSubmit: (data) => {
             setSetPasswordLoading(true);
-
-            confirmSignIn({
-                challengeResponse: data.password
-            }).then((res) => {
-                console.log(res);
-                handleLoginSuccess(res);
-            }).catch((err) => {
-                console.log(err);
-                enqueueSnackbar("Login failed! " + err.message, { variant: "error" });
-                setSetPasswordLoading(false);
-            })
         }
     })
 
@@ -205,18 +169,6 @@ export default function Login() {
         }),
         onSubmit: (data) => {
             setVerifyLoading(true);
-            confirmSignIn({
-                challengeResponse: data.code
-            }).then((res) => {
-                console.log(res);
-                setVerifyLoading(false);
-                setVerifyDialog(false);
-                handleLoginSuccess(res);
-            }).catch((err) => {
-                console.log(err);
-                enqueueSnackbar("Login failed! " + err.message, { variant: "error" });
-                setVerifyLoading(false);
-            })
         }
     })
 

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
@@ -6,10 +6,8 @@ import { grey } from '@mui/material/colors';
 import { responsiveFontSizes } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
-import { Amplify } from 'aws-amplify';
 
 import './index.css'
-import { fetchAuthSession } from 'aws-amplify/auth';
 
 let fonts = [
   'Nunito',
@@ -158,48 +156,6 @@ let theme = createTheme({
     borderRadius: 10,
   },
 
-});
-
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
-      userPoolClientId: import.meta.env.VITE_COGNITO_CLIENT_ID,
-      identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID,
-      loginWith: {
-        email: true,
-      },
-      signUpVerificationMethod: "code",
-      userAttributes: {
-        email: {
-          required: true,
-        },
-      },
-      allowGuestAccess: true,
-      passwordFormat: {
-        minLength: 8,
-        requireLowercase: true,
-        requireUppercase: true,
-        requireNumbers: true,
-        requireSpecialCharacters: true,
-      },
-    },
-  },
-  API: {
-    REST: {
-      midori: {
-        endpoint: import.meta.env.VITE_API_URL,
-      }
-    }
-  }
-}, {
-  API: {
-    REST: {
-      headers: async () => {
-        return { Authorization: localStorage.getItem("token") };
-      }
-    }
-  }
 });
 
 theme = responsiveFontSizes(theme);

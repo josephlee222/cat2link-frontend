@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Container, Typography, Box, Card, Skeleton, CardContent, CardMedia, Chip, Stack, Grid2, useTheme, CardActions } from '@mui/material'
-import { CategoryRounded, InfoRounded, SearchRounded, WebRounded } from '@mui/icons-material';
+import { CategoryRounded, InfoRounded, WebRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
 import { useSnackbar } from "notistack";
 import http from '../http';

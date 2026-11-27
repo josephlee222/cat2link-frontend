@@ -31,25 +31,12 @@ instance.interceptors.response.use(function (response) {
     // 401 - Unauthorized - Need to login again
     // 403 - Forbidden - User role does not have access to this resource
     // Do something with response error
-    if (error.response.status === 401) {
-        try {
-            if (localStorage.getItem("token")) {
-                try {
-                    http.get("/auth/refresh").then((res) => {
-                        const accessToken = res.data.access_token;
-                        setToken(accessToken);
-                        localStorage.setItem("token", accessToken);
-                    }).catch((e) => {
-                        console.log(e);
-                    });
-                } catch (e) {
-                    console.log(e);
-                    localStorage.clear();
-                    alert("Your session has expired. Please login again.");
-                    window.location.href = "/login";
-                }
-            }
-        } catch (e) { }
+    if (error.response?.status === 401 && localStorage.getItem("token") && error.config?.url !== "/auth/refresh") {
+        instance.get("/auth/refresh").then((res) => {
+            localStorage.setItem("token", res.data.access_token);
+        }).catch((e) => {
+            console.error("Failed to refresh session", e);
+        });
     }
     return Promise.reject(error);
 });

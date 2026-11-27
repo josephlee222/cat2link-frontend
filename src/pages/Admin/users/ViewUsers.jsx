@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { Chip, Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Card, CardContent } from '@mui/material'
+import { useEffect, useState, useContext } from 'react';
+import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Card, CardContent } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
+
 import { useNavigate } from 'react-router-dom';
 import http from '../../../http';
 import EditIcon from '@mui/icons-material/Edit';
-import LabelIcon from '@mui/icons-material/Label';
+
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -16,7 +16,6 @@ import { CategoryContext } from './AdminUsersRoutes';
 import CardTitle from '../../../components/CardTitle';
 import { Person } from '@mui/icons-material';
 import titleHelper from '../../../functions/helpers';
-import { get } from "aws-amplify/api";
 import { enqueueSnackbar } from 'notistack';
 
 function getChipProps(params) {
@@ -99,15 +98,9 @@ function ViewUsers() {
     }
 
     const handleGetUsers = async () => {
-        var normal = get({
-            apiName: "midori",
-            path: "/admin/users",
-        })
-
         try {
-            var res = await normal.response
-            var data = await res.body.json()
-            setUsers(data)
+            const res = await http.get("/admin/users")
+            setUsers(res.data)
             setLoading(false)
         } catch (err) {
             console.log(err)

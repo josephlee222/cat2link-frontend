@@ -13,9 +13,8 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import PublicIcon from '@mui/icons-material/PublicRounded';
 import FileUploadIcon from '@mui/icons-material/FileUploadRounded';
 import PageHeader from '../../components/PageHeader'
-import { updateUserAttributes, fetchUserAttributes } from 'aws-amplify/auth'
 import http from "../../http";
-import md5 from "md5";
+
 import { useAuth } from "../../functions/AuthProvider";
 import ViewProfile from './ViewProfile'
 import ViewSecurity from './ViewSecurity'
@@ -63,55 +62,12 @@ export default function ProfileRoutes() {
         })
     }
 
-    const handleGravatarChange = () => {
-        setLoadingPicture(true);
-        const email_md5 = md5(user.email)
-        updateUserAttributes({ userAttributes: {picture: "gravatar"} }).then(async () => {
-            enqueueSnackbar("Profile picture updated successfully!", { variant: "success" });
-            const updatedUser = await fetchUserAttributes();
-            setUser(updatedUser);
-            setLoadingPicture(false);
-            handleChangePictureDialogClose();
-        }).catch((err) => {
-            enqueueSnackbar("Profile picture update failed! " + err.message, { variant: "error" });
-            setLoadingPicture(false);
-            handleChangePictureDialogClose();
-        })
-
-
-        // const data = {
-        //     profilePictureType: "gravatar"
-        // }
-        // http.put("/User", data).then((res) => {
-        //     if (res.status === 200) {
-        //         enqueueSnackbar("Profile picture updated successfully!", { variant: "success" });
-        //         setUser(res.data);
-        //         setLoadingPicture(false);
-        //         handleChangePictureDialogClose();
-        //     } else {
-        //         enqueueSnackbar("Profile picture update failed!", { variant: "error" });
-        //         setLoadingPicture(false);
-        //         handleChangePictureDialogClose();
-        //     }
-        // }).catch((err) => {
-        //     enqueueSnackbar("Profile picture update failed! " + err.response.data.message, { variant: "error" });
-        //     setLoadingPicture(false);
-        //     handleChangePictureDialogClose();
-        // })
-    }
-
     useEffect(() => {
         if (!user) {
             enqueueSnackbar("You must be logged in to view this page", { variant: "error" });
             navigate("/login");
         }
 
-        // validateUser().then((valid) => {
-        //     if (!valid) {
-        //         enqueueSnackbar("You must be logged in to view this page", { variant: "error" });
-        //         navigate("/login");
-        //     }
-        // })
     }, [])
 
     return (
@@ -170,7 +126,7 @@ export default function ProfileRoutes() {
                         <DialogContentText>
                             You are currently using a {user ? user.profilePictureType === "gravatar" ? "Gravatar" : "local" : "unknown"} profile picture.
                             <br /><br />
-                            You can select a new profile picture from your computer or from Gravatar. To set a new profile picture from your computer, click on the "Upload Image" button below. To set a new profile picture from Gravatar, click on the "Use Gravatar" button below.
+                            To set a new profile picture from your computer, click on the "Upload Image" button below. Switching to Gravatar is currently unavailable.
                             <br /><br />
                             For information on how to set a profile picture on Gravatar, please visit <a href="https://en.gravatar.com/support/">https://en.gravatar.com/support/</a>.
                         </DialogContentText>
@@ -178,7 +134,7 @@ export default function ProfileRoutes() {
                     <DialogActions>
                         <Stack direction={["column", "row"]} spacing={1}>
                             <Button style={{ justifyContent: "flex-end" }} onClick={handleChangePictureDialogClose} startIcon={<CloseIcon />}>Cancel</Button>
-                            <LoadingButton style={{ justifyContent: "flex-end" }} loadingPosition="start" loading={loadingPicture} variant="text" color="primary" startIcon={<PublicIcon />} onClick={handleGravatarChange}>Use Gravatar</LoadingButton>
+                            <LoadingButton style={{ justifyContent: "flex-end" }} variant="text" startIcon={<PublicIcon />} disabled>Use Gravatar</LoadingButton>
                             <LoadingButton style={{ justifyContent: "flex-end" }} loadingPosition="start" loading={loadingPicture} variant="text" color="primary" startIcon={<FileUploadIcon />} component="label">Upload Image<input type='file' onChange={handlePictureChange} hidden /></LoadingButton>
                         </Stack>
                     </DialogActions>

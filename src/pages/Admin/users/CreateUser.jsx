@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography, Alert, MenuItem } from '@mui/material'
+import { useState, useEffect, useContext } from 'react';
+import { Card, CardContent, Box, TextField, Grid, Alert, MenuItem } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+
 import AddIcon from '@mui/icons-material/Add';
 import CardTitle from "../../../components/CardTitle";
 import http from '../../../http'
 import { useSnackbar } from 'notistack'
-import { Form, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { PersonAddRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminUsersRoutes';
 import titleHelper from '../../../functions/helpers';
-import { post } from 'aws-amplify/api';
 
 function CreateUser() {
 
@@ -41,25 +40,15 @@ function CreateUser() {
             data.name = data.name.trim();
             data.username = data.username.trim();
 
-            var normal = post({
-                apiName: "midori",
-                path: "/admin/users",
-                options: {
-                    body: {
-                        ...data
-                    }
-                }
-            })
-
             try {
-                var res = await normal.response
+                await http.post("/admin/users", data)
                 
                 enqueueSnackbar("User created successfully! Invitation E-mail has been sent to the user.", { variant: "success" });
                 navigate("/staff/users")
                 setLoading(false);
             } catch (err) {
                 console.log(err)
-                var message = JSON.parse(err.response.body).Message
+                var message = err.response?.data?.message || err.response?.data?.Message || err.message
                 enqueueSnackbar("Unable to create user! " + message, { variant: "error" });
                 setLoading(false);
             }

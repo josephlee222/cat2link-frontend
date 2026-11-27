@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardMedia, Container, Typography, Divider, Stack, Grid, Dialog, DialogContent, DialogActions, DialogTitle, Button } from '@mui/material'
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardMedia, Container, Typography, Divider, Grid, Dialog, DialogContent, DialogActions, DialogTitle, Button } from '@mui/material';
 import CardTitle from '../components/CardTitle'
 import { Close, Info } from '@mui/icons-material'
 import InfoBox from '../components/InfoBox'

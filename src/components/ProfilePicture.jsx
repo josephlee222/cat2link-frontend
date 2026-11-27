@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Avatar } from '@mui/material'
 import { stringAvatar } from "../functions/stringAvatar";
 import md5 from "md5";

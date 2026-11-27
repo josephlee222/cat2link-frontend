@@ -1,11 +1,8 @@
-import React, { useEffect, useRef } from 'react'
-import { useState } from 'react'
-import { Typography, Stack, IconButton, Button, Divider, Box, CircularProgress, Dialog, AppBar, Toolbar, useMediaQuery, useTheme, DialogContent, Chip, Grid2, TextField, MenuItem, Alert, ButtonBase, Card, CardContent, CardMedia, DialogContentText, DialogActions, DialogTitle } from '@mui/material'
+import { useEffect, useRef, useState } from 'react';
+import { Typography, Stack, IconButton, Button, Divider, Box, CircularProgress, Dialog, AppBar, Toolbar, useMediaQuery, useTheme, DialogContent, Chip, Grid2, TextField, MenuItem, Alert, Card, CardContent, CardMedia, DialogContentText, DialogActions, DialogTitle } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
-import { WarningRounded, CloseRounded, MoreVertRounded, FileDownloadOffRounded, PersonRounded, EditRounded, RefreshRounded, Looks3Rounded, LooksTwoRounded, LooksOneRounded, CheckRounded, AccessTimeRounded, HourglassTopRounded, NewReleasesRounded, SaveRounded, EditOffRounded, UploadFileRounded, InsertDriveFileRounded, DownloadRounded, DeleteRounded, CategoryRounded } from '@mui/icons-material';
-import { del, get, put } from 'aws-amplify/api';
+import { WarningRounded, CloseRounded, FileDownloadOffRounded, PersonRounded, EditRounded, RefreshRounded, SaveRounded, EditOffRounded, InsertDriveFileRounded, DownloadRounded, DeleteRounded, CategoryRounded } from '@mui/icons-material';
 import UserInfoPopover from './UserInfoPopover';
-import TaskPopover from './TaskPopover';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { LoadingButton } from '@mui/lab';
@@ -63,18 +60,8 @@ export default function ItemDialog(props) {
                     categoryId: values.categoryId,
                 }
 
-                var req = put({
-                    apiName: "midori",
-                    path: "/admin/items/" + props.itemId,
-                    options: {
-                        body: {
-                            ...data
-                        }
-                    }
-                })
-
                 try {
-                    var res = await req.response
+                    await http.put("/admin/items/" + props.itemId, data)
                     setEditLoading(false)
                     setEditMode(false)
                     handleGetProject(props.projectId)
@@ -120,15 +107,9 @@ export default function ItemDialog(props) {
 
     const handleGetAttachments = async (id) => {
         setAttachmentLoading(true)
-        var attachmentsReq = get({
-            apiName: "midori",
-            path: "/items/" + id + "/attachments",
-        })
-
         try {
-            var attachmentsRes = await attachmentsReq.response
-            var attachmentsData = await attachmentsRes.body.json()
-            setAttachments(attachmentsData)
+            const response = await http.get("/items/" + id + "/attachments")
+            setAttachments(response.data)
             setAttachmentLoading(false)
         } catch (err) {
             console.log(err)
@@ -167,13 +148,8 @@ export default function ItemDialog(props) {
         setDeleteAttachmentLoading(true)
 
         // /admin/items/{id}/attachments/{filename}
-        var req = del({
-            apiName: "midori",
-            path: "/admin/items/" + props.itemId + "/attachments/" + deleteAttachment,
-        })
-
         try {
-            var res = await req.response
+            await http.delete("/admin/items/" + props.itemId + "/attachments/" + deleteAttachment)
             setDeleteAttachmentLoading(false)
             handleGetAttachments(props.itemId)
             handleDeleteAttachmentClose()

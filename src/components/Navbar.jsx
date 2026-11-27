@@ -4,9 +4,8 @@ import { useState, useContext } from "react"
 import LoginIcon from '@mui/icons-material/LoginRounded';
 import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
-import NavbarNotifications from "./NavbarNotifications";
-import { WebRounded, DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SearchRounded, SettingsRounded, TerminalRounded, CategoryRounded } from "@mui/icons-material";
-import { HomeRounded } from "@mui/icons-material";
+
+import { WebRounded, DashboardRounded, ForestRounded, LogoutRounded, MenuRounded, PersonRounded, SettingsRounded, TerminalRounded, CategoryRounded, HomeRounded } from "@mui/icons-material";
 import StaffMenu from "./StaffMenu";
 import { useAuth } from "../functions/AuthProvider";
 

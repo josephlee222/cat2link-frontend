@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Box, IconButton, ListItemIcon, ListItemText, Divider, Typography, colors, Menu, MenuItem } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture";

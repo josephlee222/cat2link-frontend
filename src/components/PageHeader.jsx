@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import { useContext } from 'react';
 import { Typography, Box } from '@mui/material'
 import { useTheme } from '@emotion/react';
 import { AppContext } from '../App';
