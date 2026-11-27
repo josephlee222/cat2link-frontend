@@ -1,5 +1,6 @@
-# ReclaimIt Frontend
+# Cat2.Link Frontend
+A frontend rewrite project for the Cat2.Link personal portfolio website.
 
-Project for Cloud Developement module at Nanyang Polytechnic.
+## Overview
 
-_Cloned from the currently in development MidoriSKY project for ECP._
+This project replaces the old Cat2.Link website which was built using PHP and static HTML, this project provides a modern, responsive frontend with improved user experience and maintainability.
