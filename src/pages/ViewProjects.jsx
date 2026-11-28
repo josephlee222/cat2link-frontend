@@ -258,8 +258,8 @@ export default function ViewProjects() {
                                         <Grid2 size={{ lg: 4, sm: 6, xs: 12 }} key={i}>
                                             <Card sx={{ width: "100%" }}>
                                                 <CardMedia
-                                                    sx={{ height: 200, backgroundColor: "darkgrey", objectFit: "contain" }}
-                                                    image={item.attachment ? bucket_url + "/items/" + item.id + "/" + item.attachment.replace(" ", "+") : "/icon.png"}
+                                                    sx={{ height: 200, backgroundColor: "darkgrey", objectFit: "cover" }}
+                                                    image={item.thumbnail_media_url ? apiUrl + "/projects/" + item.id + "/thumbnail" : "/unknown.png"}
                                                     title="Background"
                                                     objectFit="contain"
                                                     component={"img"}

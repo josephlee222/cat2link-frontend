@@ -41,6 +41,7 @@ function ViewProjects() {
     const filepondRef = useRef(null)
     const navigate = useNavigate()
     const theme = useTheme()
+    const token = localStorage.getItem("token")
     titleHelper("Manage Projects")
 
     registerPlugin(FilePondPluginImagePreview);
@@ -74,24 +75,30 @@ function ViewProjects() {
     const createItemFormik = useFormik({
         initialValues: {
             name: "",
-            categoryId: 1,
+            category_id: 1,
+            year: new Date().getFullYear(),
+            url: "",
+            short_description: "",
             description: ""
         },
         validationSchema: yup.object({
             name: yup.string().required("Project name is required"),
-            categoryId: yup.number().required("Project category is required"),
-            description: yup.string().required("Project description is required")
+            category_id: yup.number().required("Project category is required"),
+            description: yup.string().required("Project description is required"),
+            short_description: yup.string().required("Project short description is required"),
+            year: yup.number().required("Project year is required"),
+            url: yup.string().required("Project URL is required").max(1024, "Project URL must be at most 1024 characters"),
         }),
         onSubmit: async (values) => {
             setCreateLoading(true)
             try {
-                const res = await http.post("/admin/projects", values)
+                const res = await http.post("/admin/projects/", values)
                 const data = res.data
-                // upload images using filepond via API env (/admin/projects/{id}/attachments)
-                setFilepondUrl(import.meta.env.VITE_API_URL + "/admin/projects/" + data.id + "/attachments")
+                // upload images using filepond via API env (/admin/projects/{id}/media)
+                setFilepondUrl(import.meta.env.VITE_API_URL + "/admin/projects/" + data.id + "/media")
                 filepondRef.current.processFiles().then(() => {
                     console.log("Files processed")
-                    enqueueSnackbar("Item created successfully", { variant: "success" })
+                    enqueueSnackbar("Project created successfully", { variant: "success" })
                     setCreateLoading(false)
                     // clear form
                     createItemFormik.resetForm()
@@ -107,7 +114,7 @@ function ViewProjects() {
 
             } catch (err) {
                 console.log(err)
-                enqueueSnackbar("Failed to create item", { variant: "error" })
+                enqueueSnackbar("Failed to create project", { variant: "error" })
                 setCreateLoading(false)
             }
         }
@@ -148,13 +155,13 @@ function ViewProjects() {
         setDeleteLoading(true)
         try {
             await http.delete("/admin/projects/" + deleteItem.id)
-            enqueueSnackbar("Item deleted successfully", { variant: "success" })
+            enqueueSnackbar("Project deleted successfully", { variant: "success" })
             setDeleteLoading(false)
             handleDeleteItemClose()
             handleGetItems()
         } catch (err) {
             console.log(err)
-            enqueueSnackbar("Failed to delete item", { variant: "error" })
+            enqueueSnackbar("Failed to delete project", { variant: "error" })
             setDeleteLoading(false)
         }
     }
@@ -168,7 +175,7 @@ function ViewProjects() {
                 setLoading(false)
             }
         }).catch((err) => {
-                enqueueSnackbar("Failed to load categories! " + err.response.data.message, { variant: "error" });
+                enqueueSnackbar("Failed to load project categories! " + err.response.data.message, { variant: "error" });
                 setLoading(false)
             }
         )
@@ -288,20 +295,65 @@ function ViewProjects() {
                             <TextField
                                 select
                                 fullWidth
-                                id="categoryId"
-                                name="categoryId"
+                                id="category_id"
+                                name="category_id"
                                 label="Project Category"
                                 variant="outlined"
-                                value={createItemFormik.values.categoryId}
+                                value={createItemFormik.values.category_id}
                                 onChange={createItemFormik.handleChange}
-                                error={createItemFormik.touched.categoryId && Boolean(createItemFormik.errors.categoryId)}
-                                helperText={createItemFormik.touched.categoryId && createItemFormik.errors.categoryId}
+                                error={createItemFormik.touched.category_id && Boolean(createItemFormik.errors.category_id)}
+                                helperText={createItemFormik.touched.category_id && createItemFormik.errors.category_id}
                                 readonly={createLoading}
                             >
                                 {category && category.map((cat) => (
                                     <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
                                 ))}
                             </TextField>
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <TextField
+                                fullWidth
+                                id="year"
+                                name="year"
+                                label="Project Year"
+                                variant="outlined"
+                                type="number"
+                                value={createItemFormik.values.year}
+                                onChange={createItemFormik.handleChange}
+                                error={createItemFormik.touched.year && Boolean(createItemFormik.errors.year)}
+                                helperText={createItemFormik.touched.year && createItemFormik.errors.year}
+                                readonly={createLoading}
+                            />
+                        </Grid2>
+                        <Grid2 size={{ xs: 12, sm: 6 }}>
+                            <TextField
+                                fullWidth
+                                id="url"
+                                name="url"
+                                label="Project URL"
+                                variant="outlined"
+                                value={createItemFormik.values.url}
+                                onChange={createItemFormik.handleChange}
+                                error={createItemFormik.touched.url && Boolean(createItemFormik.errors.url)}
+                                helperText={createItemFormik.touched.url && createItemFormik.errors.url}
+                                readonly={createLoading}
+                            />
+                        </Grid2>
+                        <Grid2 size={{ xs: 12 }}>
+                            <TextField
+                                fullWidth
+                                multiline
+                                minRows={2}
+                                id="short_description"
+                                name="short_description"
+                                label="Project Short Description"
+                                variant="outlined"
+                                value={createItemFormik.values.short_description}
+                                onChange={createItemFormik.handleChange}
+                                error={createItemFormik.touched.short_description && Boolean(createItemFormik.errors.short_description)}
+                                helperText={createItemFormik.touched.short_description && createItemFormik.errors.short_description}
+                                readonly={createLoading}
+                            />
                         </Grid2>
                         <Grid2 size={{ xs: 12 }}>
                             <TextField
@@ -324,12 +376,12 @@ function ViewProjects() {
                         </Grid2>
                         <Grid2 size={{ xs: 12 }}>
                             <CardTitle title="Upload Images" icon={<UploadFileRounded />} />
-                            <Typography variant="body2" color="textSecondary" mb={"1rem"}>Upload up to 3 images of the item</Typography>
+                            <Typography variant="body2" color="textSecondary" mb={"1rem"}>Upload gallery images for the project</Typography>
                             <FilePond
                                 ref={filepondRef}
                                 files={newItemFiles}
                                 allowMultiple={true}
-                                maxFiles={3}
+                                maxFiles={20}
                                 onupdatefiles={(fileItems) => {
                                     setNewItemFiles(fileItems.map((fileItem) => fileItem.file));
                                 }}
@@ -347,7 +399,7 @@ function ViewProjects() {
                                     process: {
                                         method: 'POST',
                                         headers: {
-                                            Authorization: filepondToken
+                                            Authorization: `Bearer ${token}`
                                         },
                                     },
                                 }}
